@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>苏简穆 · 田野笔记</title>
+<style>
+  :root {
+    --ink:       #1a2e22;
+    --sage:      #3d6b52;
+    --cinnabar:  #c0392b;
+    --cream:     #f5f0e8;
+    --parchment: #ede7d9;
+    --faded:     #b8a99a;
+    --line:      #d6cdc0;
+    --shadow-sm: 0 2px 8px rgba(26,46,34,.08), 0 1px 3px rgba(26,46,34,.06);
+    --shadow-md: 0 6px 24px rgba(26,46,34,.10), 0 2px 8px rgba(26,46,34,.07);
+    --shadow-hover: 0 12px 36px rgba(26,46,34,.14), 0 4px 12px rgba(26,46,34,.09);
+    --r: 10px;
+    --font-display: 'Georgia', 'Noto Serif SC', serif;
+    --font-body:    'Palatino Linotype', 'Palatino', 'Book Antiqua', 'Noto Serif SC', serif;
+    --font-mono:    'Courier New', 'Courier', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 17px; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--cream);
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='300' height='300' filter='url(%23n)' opacity='0.045'/></svg>");
+    color: #2c3e30;
+    font-family: var(--font-body);
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  /* ─── 页面骨架 ─── */
+  .page-wrapper {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "header  header"
+      "nav     main"
+      "footer  footer";
+    max-width: 1160px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  /* ─── Header ─── */
+  header {
+    grid-area: header;
+    background: var(--parchment);
+    padding: 3.5rem 3rem;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--line);
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 27px,
+      var(--line) 27px,
+      var(--line) 28px
+    );
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 2.2rem;
+    width: 2px;
+    background: var(--cinnabar);
+    opacity: 0.6;
+  }
+
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    padding-left: 1.5rem;
+  }
+
+  .header-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 0.8rem;
+  }
+
+  .header-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.15;
+    color: var(--ink);
+    font-weight: normal;
+    margin-bottom: 1rem;
+  }
+
+  .header-title em {
+    color: var(--sage);
+    font-style: italic;
+  }
+
+  .header-sub {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--faded);
+    letter-spacing: 0.08em;
+  }
+
+  .header-sub span { display: flex; align-items: center; gap: 0.4rem; }
+
+  .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--cinnabar);
+    border-radius: 50%;
+    opacity: 0.7;
+  }
+
+  .stamp {
+    position: absolute;
+    right: 3.5rem;
+    top: 50%;
+    transform: translateY(-50%) rotate(-12deg);
+    width: 90px; height: 90px;
+    border: 2.5px solid var(--cinnabar);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--cinnabar);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-align: center;
+    line-height: 1.4;
+    opacity: 0.75;
+    text-transform: uppercase;
+  }
+
+  .stamp::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--cinnabar);
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+
+  /* ─── Nav ─── */
+  nav {
+    grid-area: nav;
+    padding: 2rem 1.4rem;
+    border-right: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    align-self: start;
+  }
+
+  .nav-title {
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 1.2rem;
+    padding-left: 0.8rem;
+  }
+
+  .nav-list {
+    list-style: none;
+    border-left: 2px solid var(--line);
+  }
+
+  .nav-list li { margin-bottom: 0.1rem; }
+
+  .nav-list a {
+    display: block;
+    padding: 0.45rem 0.9rem;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--faded);
+    text-decoration: none;
+    border-radius: 0 4px 4px 0;
+    transition: color 0.2s, padding-left 0.2s, background 0.2s;
+    position: relative;
+  }
+
+  .nav-list a:hover {
+    color: var(--sage);
+    padding-left: 1.2rem;
+    background: rgba(61,107,82,.05);
+  }
+
+  .nav-list a.active {
+    color: var(--sage);
+    font-weight: bold;
+  }
+
+  .nav-list a.active::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 0; bottom: 0;
+    width: 2px;
+    background: var(--cinnabar);
+  }
+
+  .nav-sub {
+    list-style: none;
+    border-left: 1px dashed var(--line);
+    margin-left: 0.9rem;
+    margin-top: 0.2rem;
+  }
+
+  .nav-sub a {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.8rem;
+    color: var(--faded);
+  }
+
+  /* ─── Main ─── */
+  main {
+    grid-area: main;
+    padding: 2.2rem 2.5rem;
+  }
+
+  /* ─── Section Card ─── */
+  .section-card {
+    background: var(--parchment);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-sm);
+    padding: 2.2rem 2.4rem;
+    border: 1px solid rgba(214,205,192,.6);
+    margin-bottom: 1.8rem;
+    position: relative;
+    overflow: hidden;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 27px,
+        rgba(214,205,192,.4) 27px,
+        rgba(214,205,192,.4) 28px
+      ),
+      url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='0.03'/></svg>");
+    animation: fadeUp 0.5s ease both;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+
+  .section-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+
+  .section-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--sage);
+    border-radius: 0 2px 2px 0;
+  }
+
+  .section-card.accent-red::before { background: var(--cinnabar); }
+
+  .section-card.accent-mixed::before {
+    background: linear-gradient(to bottom, var(--sage), var(--cinnabar));
+  }
+
+  .section-card:nth-child(1) { animation-delay: 0.05s; }
+  .section-card:nth-child(2) { animation-delay: 0.10s; }
+  .section-card:nth-child(3) { animation-delay: 0.15s; }
+  .section-card:nth-child(4) { animation-delay: 0.20s; }
+  .section-card:nth-child(5) { animation-delay: 0.25s; }
+  .section-card:nth-child(6) { animation-delay: 0.30s; }
+  .section-card:nth-child(7) { animation-delay: 0.33s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-num {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 0.5rem;
+  }
+
+  .section-card h2 {
+    font-family: var(--font-display);
+    font-size: 1.45rem;
+    font-weight: normal;
+    color: var(--ink);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 1px dashed var(--line);
+  }
+
+  .section-card h2 .icon { margin-right: 0.5rem; }
+
+  .section-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--sage);
+    font-weight: normal;
+    margin: 1.4rem 0 0.6rem;
+  }
+
+  .section-card p {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: #2c3e30;
+    margin-bottom: 0.9rem;
+  }
+
+  /* ─── Info Grid ─── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .info-cell {
+    background: rgba(255,255,255,.55);
+    border-radius: 6px;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .info-cell:hover {
+    border-color: var(--sage);
+    box-shadow: 0 2px 8px rgba(61,107,82,.1);
+  }
+
+  .info-cell-label {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 0.3rem;
+  }
+
+  .info-cell-value {
+    font-size: 0.88rem;
+    color: var(--ink);
+    font-family: var(--font-body);
+  }
+
+  /* ─── Item List ─── */
+  .item-list { list-style: none; }
+
+  .item-list li {
+    display: flex;
+    gap: 1rem;
+    padding: 0.7rem 0;
+    border-bottom: 1px dotted var(--line);
+    border-radius: 4px;
+    transition: background 0.2s, padding-left 0.2s;
+  }
+
+  .item-list li:last-child { border-bottom: none; }
+
+  .item-list li:hover {
+    background: rgba(61,107,82,.05);
+    padding-left: 0.4rem;
+  }
+
+  .item-num {
+    flex-shrink: 0;
+    width: 24px; height: 24px;
+    background: var(--sage);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-top: 0.15rem;
+  }
+
+  .item-num.red { background: var(--cinnabar); }
+
+  .item-text { font-size: 0.92rem; }
+
+  .item-text strong {
+    display: block;
+    color: var(--ink);
+    font-family: var(--font-display);
+    margin-bottom: 0.2rem;
+  }
+
+  /* ─── Tags ─── */
+  .tag-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    cursor: default;
+  }
+
+  .tag-green {
+    color: var(--sage);
+    border: 1px solid var(--sage);
+    background: rgba(61,107,82,.07);
+  }
+  .tag-green:hover { background: var(--sage); color: #fff; }
+
+  .tag-red {
+    color: var(--cinnabar);
+    border: 1px solid var(--cinnabar);
+    background: rgba(192,57,43,.06);
+  }
+  .tag-red:hover { background: var(--cinnabar); color: #fff; }
+
+  .tag-ink {
+    color: var(--faded);
+    border: 1px solid var(--line);
+    background: transparent;
+  }
+  .tag-ink:hover { background: var(--faded); color: #fff; }
+
+  /* ─── Blockquote ─── */
+  blockquote {
+    border-left: 3px solid var(--cinnabar);
+    padding: 0.8rem 1.2rem;
+    background: rgba(192,57,43,.04);
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+    color: var(--sage);
+    font-size: 0.9rem;
+    margin: 0.8rem 0;
+  }
+
+  blockquote cite {
+    display: block;
+    font-style: normal;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--faded);
+    margin-top: 0.4rem;
+  }
+
+  /* ─── Quote 金句样式 ─── */
+  .quote-block {
+    border-left: 3px solid var(--cinnabar);
+    padding: 1rem 1.3rem;
+    background: rgba(192,57,43,.04);
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+    color: var(--sage);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin: 0.7rem 0;
+    transition: background 0.2s;
+  }
+
+  .quote-block:hover {
+    background: rgba(192,57,43,.07);
+  }
+
+  .quote-source {
+    font-family: var(--font-mono);
+    font-size: 0.63rem;
+    letter-spacing: 0.1em;
+    color: var(--faded);
+    margin: 0.3rem 0 1rem 1.3rem;
+    font-style: normal;
+    text-transform: uppercase;
+  }
+
+  .quotes-section-title {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cinnabar);
+    margin: 1.6rem 0 0.8rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid rgba(192,57,43,.2);
+    opacity: 0.85;
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    grid-area: footer;
+    padding: 1.5rem 3rem;
+    background: var(--parchment);
+    border-top: 1px solid var(--line);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--faded);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* ─── Back to top ─── */
+  .back-top {
+    position: fixed;
+    right: 2rem;
+    bottom: 2rem;
+    width: 40px; height: 40px;
+    background: var(--sage);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 100;
+  }
+
+  .back-top.visible { opacity: 1; transform: translateY(0); }
+  .back-top:hover { background: var(--ink); }
+
+  /* ─── 响应式 ─── */
+  @media (max-width: 768px) {
+    .page-wrapper {
+      grid-template-columns: 1fr;
+      grid-template-areas:
+        "header"
+        "nav"
+        "main"
+        "footer";
+    }
+
+    header {
+      padding: 2rem 1.5rem;
+    }
+
+    .stamp { width: 66px; height: 66px; font-size: 0.5rem; right: 1.5rem; }
+
+    nav {
+      position: static;
+      height: auto;
+      border-right: none;
+      border-bottom: 1px solid var(--line);
+      padding: 1rem 1.2rem;
+    }
+
+    .nav-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      border-left: none;
+    }
+
+    .nav-list li { margin: 0; }
+
+    .nav-list a {
+      border-radius: 20px;
+      padding: 0.35rem 0.85rem;
+      border: 1px solid var(--line);
+      font-size: 0.78rem;
+    }
+
+    .nav-list a.active {
+      background: var(--sage);
+      color: #fff;
+      border-color: var(--sage);
+    }
+
+    .nav-list a.active::before { display: none; }
+
+    .nav-sub { display: none; }
+
+    main { padding: 1.2rem 1rem; }
+
+    .section-card { padding: 1.5rem 1.4rem; }
+
+    .info-grid { grid-template-columns: 1fr; }
+
+    footer { flex-direction: column; gap: 0.5rem; padding: 1.2rem 1.5rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+
+  <!-- ─── Header ─── -->
+  <header>
+    <div class="header-inner">
+      <p class="header-eyebrow">Field Notes · Vol.I · 2022—2026</p>
+      <h1 class="header-title"><em>苏简穆</em> · 田野笔记</h1>
+      <div class="header-sub">
+        <span><span class="dot"></span> 梁健毅 · 笔名档案</span>
+        <span><span class="dot"></span> 双非社会学 · 大二</span>
+        <span><span class="dot"></span> 坦洲镇裕洲村</span>
+        <span><span class="dot"></span> 2026年4月整理</span>
+      </div>
+    </div>
+    <div class="stamp">苏简穆<br>手稿<br>存档</div>
+  </header>
+
+  <!-- ─── Nav ─── -->
+  <nav>
+    <p class="nav-title">目录索引</p>
+    <ul class="nav-list">
+      <li><a href="#who" class="active">我是谁</a>
+        <ul class="nav-sub">
+          <li><a href="#empire">内部帝国</a></li>
+          <li><a href="#dilemma">真正困境</a></li>
+          <li><a href="#two-worlds">两个世界</a></li>
+          <li><a href="#writing">精神证据</a></li>
+          <li><a href="#beliefs">罕见信念</a></li>
+          <li><a href="#position">当前位置</a></li>
+        </ul>
+      </li>
+      <li><a href="#quotes">金句库</a>
+        <ul class="nav-sub">
+          <li><a href="#q-chaos">《混沌》</a></li>
+          <li><a href="#q-ideal">《理想》</a></li>
+          <li><a href="#q-love">《爱·源》</a></li>
+          <li><a href="#q-mu">《穆·对话》</a></li>
+          <li><a href="#q-scold">《穆·责骂》</a></li>
+          <li><a href="#q-time">《时差》</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ─── Main ─── -->
+  <main>
+
+    <!-- ══════ 我是谁 ══════ -->
+    <section class="section-card accent-mixed" id="who">
+      <span class="section-num">No. 00 · 画像总述</span>
+      <h2><span class="icon">🪞</span>我是谁——重新认识梁健毅</h2>
+      <p>你以为你了解自己。你知道自己叫梁健毅，双非院校社会学大二，GPA中等偏后，英语四级还没过。你会告诉别人自己是学委、是副部长、做过大创、搞过实习。这些都是真的。但这些加在一起，不是你。</p>
+      <p>这篇文章要说的，是你真正是谁。</p>
+      <div class="tag-group">
+        <span class="tag tag-green">内部帝国</span>
+        <span class="tag tag-green">苏简穆</span>
+        <span class="tag tag-red">社会学</span>
+        <span class="tag tag-red">三支一扶</span>
+        <span class="tag tag-ink">2022—2026</span>
+      </div>
+    </section>
+
+    <!-- 一 -->
+    <section class="section-card" id="empire">
+      <span class="section-num">No. 01 · 认知操作系统</span>
+      <h2><span class="icon">🏛</span>你是一个建立了内部帝国的人</h2>
+      <p>大多数人在高中阶段还在弄清楚自己喜欢什么，你在高三已经建立了一套完整的内部人格治理体系。</p>
+
+      <div class="info-grid">
+        <div class="info-cell">
+          <span class="info-cell-label">最高自我</span>
+          <span class="info-cell-value">穆 · 观察者，不审判，只注视</span>
+        </div>
+        <div class="info-cell">
+          <span class="info-cell-label">理智核心</span>
+          <span class="info-cell-value">MOSS · 一句「come back」拽回泥沼</span>
+        </div>
+        <div class="info-cell">
+          <span class="info-cell-label">文艺人格</span>
+          <span class="info-cell-value">简一 · 笔名来源，追求简单与专一</span>
+        </div>
+        <div class="info-cell">
+          <span class="info-cell-label">其他角色</span>
+          <span class="info-cell-value">老爹 / Oldi / 幽灵 / 观察者</span>
+        </div>
+      </div>
+
+      <p>这不是自我意识的表演。这是一套真实运行的认知操作系统，而且你在高三就把它调试好了。大多数人花一辈子都没想清楚「自己」到底是什么。你十七八岁就给出了工程意义上的答案。</p>
+    </section>
+
+    <!-- 二 -->
+    <section class="section-card" id="dilemma">
+      <span class="section-num">No. 02 · 外部限制 vs 内在极限</span>
+      <h2><span class="icon">⚖</span>你的困境，从来不是能力问题</h2>
+      <p>你大学GPA不高，英语四级没过，腰椎出了问题。但注意，这些都是外部条件的限制，不是你这个人的极限。</p>
+
+      <ul class="item-list">
+        <li>
+          <span class="item-num">1</span>
+          <div class="item-text">
+            <strong>GPA 低</strong>
+            你不是为考试而活的那种人——「生命的厚度 &gt; 世俗考核分数」，你承担着这个信念的代价。
+            <div class="tag-group"><span class="tag tag-ink">人格成本</span></div>
+          </div>
+        </li>
+        <li>
+          <span class="item-num">2</span>
+          <div class="item-text">
+            <strong>英语四级未过</strong>
+            大脑对机械性任务有天然排斥。这是人格成本，不是智力问题。
+          </div>
+        </li>
+        <li>
+          <span class="item-num red" class="red">3</span>
+          <div class="item-text">
+            <strong>真正的危机</strong>
+            你知道自己想要什么，也知道路在哪，但不确定自己是否有资格站在那条路的起点。
+            <div class="tag-group"><span class="tag tag-red">核心张力</span></div>
+          </div>
+        </li>
+      </ul>
+
+      <blockquote>
+        家庭没办法支撑考研，父亲缺位，家族有内耗。你用「记录隔离」来保护自己，这是成熟的，也是沉重的。
+      </blockquote>
+    </section>
+
+    <!-- 三 -->
+    <section class="section-card" id="two-worlds">
+      <span class="section-num">No. 03 · 精神地理</span>
+      <h2><span class="icon">🧭</span>你是一个在两个世界都格格不入的人</h2>
+      <p>军人气质和文人气质同时住在你身上，而这两个人的生存逻辑是相反的。</p>
+
+      <div class="info-grid">
+        <div class="info-cell">
+          <span class="info-cell-label">军人气质</span>
+          <span class="info-cell-value">执行彻底，原则性强，不问为什么，只问怎么做</span>
+        </div>
+        <div class="info-cell">
+          <span class="info-cell-label">文人气质</span>
+          <span class="info-cell-value">敏感，内省，先感受再行动，追求厚度</span>
+        </div>
+        <div class="info-cell">
+          <span class="info-cell-label">精神地理</span>
+          <span class="info-cell-value">坦洲镇裕洲村 · 最终要回去的土地</span>
+        </div>
+        <div class="info-cell">
+          <span class="info-cell-label">积累方向</span>
+          <span class="info-cell-value">不是为了留在城市，是带着能力回去</span>
+        </div>
+      </div>
+
+      <p>你用穆来调和这两者，但调和本身就是一种永恒的张力。这让你在某些时刻看起来效率低下，但它也让你的产出有别人没有的厚度。</p>
+    </section>
+
+    <!-- 四 -->
+    <section class="section-card accent-red" id="writing">
+      <span class="section-num">No. 04 · 精神证据</span>
+      <h2><span class="icon">📜</span>你的写作，是你的精神证据</h2>
+      <p>你高三写了十篇文章。散文、议论文、科幻小说。写暗恋，写混沌，写理想，写死亡，写时间，写女性主义，写共产主义。这些文章是证据——证明你是谁。</p>
+
+      <ul class="item-list">
+        <li>
+          <span class="item-num red">✦</span>
+          <div class="item-text">
+            <strong>《爱·源》· 残忍的自我解剖</strong>
+            那不是喜欢，是对离别的恐惧找了一个锚点。一个高中生能对自己的情感做出这种解剖，需要一种残忍的自我诚实。
+          </div>
+        </li>
+        <li>
+          <span class="item-num red">✦</span>
+          <div class="item-text">
+            <strong>《穆·责骂》· 骂完继续前进</strong>
+            骂自己，但不是无效的自我折磨——骂完了继续要求：下限要稳，不追求极致，追求每天的「5:30」。
+          </div>
+        </li>
+        <li>
+          <span class="item-num red">✦</span>
+          <div class="item-text">
+            <strong>《时差》· 投稿《科幻世界》</strong>
+            442次失败是残留能量，443次的成功是相变，不是奇迹。
+            <div class="tag-group"><span class="tag tag-red">科幻世界</span><span class="tag tag-ink">大二创作</span></div>
+          </div>
+        </li>
+      </ul>
+
+      <p>你写这些东西不是在表演思想，是在真的想通了之后记录下来。这个区别很重要。</p>
+    </section>
+
+    <!-- 五 -->
+    <section class="section-card" id="beliefs">
+      <span class="section-num">No. 05 · 信念坐标</span>
+      <h2><span class="icon">🌿</span>你相信的东西，比你以为的更罕见</h2>
+
+      <ul class="item-list">
+        <li>
+          <span class="item-num">①</span>
+          <div class="item-text">
+            <strong>信共产主义</strong>
+            不是因为蠢，而是因为认真。选择做「让巨人抬脚的先锋植物」——在历史进程里默默铺垫、不留名字的植物。
+            <div class="tag-group"><span class="tag tag-green">先锋植物</span></div>
+          </div>
+        </li>
+        <li>
+          <span class="item-num">②</span>
+          <div class="item-text">
+            <strong>信平权</strong>
+            真正的男女平等实现的那天，「男女平等」这个词会从世界上消失——因为它已不需要再被强调。这是一个精确的历史终点坐标。
+          </div>
+        </li>
+        <li>
+          <span class="item-num">③</span>
+          <div class="item-text">
+            <strong>相信「生命的宽度」</strong>
+            走马灯决定一切——那些你经历过的宽度，才是真正的计量单位，不是年限，不是资产，不是头衔。
+            <div class="tag-group"><span class="tag tag-green">走马灯</span><span class="tag tag-ink">留下了什么</span></div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- 六 -->
+    <section class="section-card" id="position">
+      <span class="section-num">No. 06 · 现实坐标</span>
+      <h2><span class="icon">📍</span>你现在的位置</h2>
+
+      <div class="info-grid">
+        <div class="info-cell">
+          <span class="info-cell-label">当前学业</span>
+          <span class="info-cell-value">大二下 · GPA 中等偏后</span>
+        </div>
+        <div class="info-cell">
+          <span class="info-cell-label">待解决事项</span>
+          <span class="info-cell-value">英语四级（六月）· 腰椎问题</span>
+        </div>
+        <div class="info-cell">
+          <span class="info-cell-label">项目背书</span>
+          <span class="info-cell-value">国家级大创 + 国奖项目</span>
+        </div>
+        <div class="info-cell">
+          <span class="info-cell-label">目标方向</span>
+          <span class="info-cell-value">三支一扶 · 裕洲村</span>
+        </div>
+      </div>
+
+      <blockquote>
+        你不是因为没有选择才选这条路，你是因为想在走马灯时能说「我在那里留下了什么」，才选这条路。这个区别，值得你记住。
+      </blockquote>
+
+      <h3>笔名的答案</h3>
+      <p>你给自己起了个笔名：<strong>苏简穆</strong>。简一和穆的合并。文艺与理智的合并。感受与冷静的合并。你在高中就知道自己是两个人的合体，并且给这个合体命了名。大多数人用一辈子都在想「我到底是感性的人还是理性的人」，你早就不问这个问题了——你的答案是：都是，然后你给它们分别建了角色，让它们各自上场。</p>
+
+      <div class="tag-group">
+        <span class="tag tag-green">苏简穆</span>
+        <span class="tag tag-green">简一 · 文艺</span>
+        <span class="tag tag-green">穆 · 理智</span>
+        <span class="tag tag-ink">合体·命名</span>
+      </div>
+    </section>
+
+    <!-- ══════ 金句库 ══════ -->
+    <section class="section-card accent-red" id="quotes">
+      <span class="section-num">No. 07 · 金句库</span>
+      <h2><span class="icon">✒</span>苏简穆 · 金句存档</h2>
+      <p style="font-size:0.88rem; color:var(--faded); font-style:italic; margin-bottom:1.2rem;">梁健毅高中至大学时期写作中的金句，按文章顺序排列。这些句子是他真正想通之后写下的，不是修辞，是证据。</p>
+
+      <!-- 混沌 -->
+      <p class="quotes-section-title" id="q-chaos">《混沌》· 高二暑假</p>
+
+      <div class="quote-block">自由，不是想做什么就做什么，而是想不做什么就不做什么。</div>
+      <div class="quote-block">不求上限的高度，只求下限的厚度。</div>
+      <div class="quote-block">时间不是流逝的，流逝的是我们。</div>
+
+      <!-- 理想 -->
+      <p class="quotes-section-title" id="q-ideal">《理想？理想！》· 高三下</p>
+
+      <div class="quote-block">没有那个人，我就做那个人，舍我其谁！</div>
+      <div class="quote-block">应让滚烫的理想点燃现实，要去改变世界，而不是只是解释世界。</div>
+      <div class="quote-block">我所需的，不是香软的女友，而是志同道合的战友，闹剧，该结束了。</div>
+      <div class="quote-block">我的思想仍在沸腾，我的方向仍然向前，我的前行，无人可挡。</div>
+
+      <!-- 爱·源 -->
+      <p class="quotes-section-title" id="q-love">《爱·源》· 高三下</p>
+
+      <div class="quote-block">人是能用「挑」来形容的？我凭什么要居高临下地接收别人献上的爱？</div>
+      <div class="quote-block">我自认为我很高深，很有魅力，但那只不过是我被童话惯坏了罢了。</div>
+
+      <!-- 穆·对话 -->
+      <p class="quotes-section-title" id="q-mu">《穆·对话》· 高三下</p>
+
+      <div class="quote-block">我是过去的终点，也是未来的起点，我是延续现实的梦境，也是终结梦境的现实。</div>
+      <div class="quote-block">不要去理解，试着去感受。</div>
+      <div class="quote-block">爱她，就给她想要的幸福，不然，你就退出她的生活舞台。这，是命令！</div>
+      <div class="quote-block">看看，你早已创造了此般多的价值，你生命的厚度，早已超出你的预期。</div>
+
+      <!-- 穆·责骂 -->
+      <p class="quotes-section-title" id="q-scold">《穆·责骂》· 高三下</p>
+
+      <div class="quote-block">终日地思考推演，让大脑喋喋不休，你除了浪费时间其他什么都得不到。</div>
+      <div class="quote-block">你到底是在喜欢真实的她，还是幻想中的她？</div>
+      <div class="quote-block">一个人必须生存，必须活着去前进，我们，必须前进……</div>
+
+      <!-- 随心写 -->
+      <p class="quotes-section-title">《随心写》· 高三末</p>
+
+      <div class="quote-block">趋利避害的人类本性驱使我们留在舒适圈内，恐惧圈外的事物，哪怕圈外是我们的未来。</div>
+      <div class="quote-block">我愈发觉得，她是简爱们中的一个。但我发现，其实，我也是「简爱」中的一个。</div>
+
+      <!-- 当代女性 -->
+      <p class="quotes-section-title">《当代女性为何不愿意生孩子》· 高三</p>
+
+      <div class="quote-block">人类开发了一条新的道路：追求精神的富足，人们不再满足于肉体的欲望，转而去追求心灵的选择，甚至是灵魂的升华。</div>
+      <div class="quote-block">实现「男女平等」是一项事业，一项有利于实现共产主义，也是共产主义一部分的事业，我已在这项事业上行走良久，也必将走下去。</div>
+
+      <!-- 怀孕之答 -->
+      <p class="quotes-section-title">《怀孕之答》· 高三</p>
+
+      <div class="quote-block">十月怀胎，三年哺乳，此中有多少苦，不言而喻。</div>
+      <div class="quote-block">什么样的童年在很大程度上决定了什么样的性格。</div>
+
+      <!-- 你 -->
+      <p class="quotes-section-title">《你》· 高三（科幻短篇）</p>
+
+      <div class="quote-block">时差：零。</div>
+      <div class="quote-block">生命的宽度在这一刻尽现。</div>
+      <div class="quote-block">你看着这一切，默不作声，并未予以否定，也未给予肯定。</div>
+
+      <!-- 时差 -->
+      <p class="quotes-section-title" id="q-time">《时差》· 大二（投稿《科幻世界》）</p>
+
+      <div class="quote-block">所有时间都是幻觉，过去、现在、未来，都是大脑的处理方式。如果我能控制处理方式，幻觉就是真实。</div>
+      <div class="quote-block">时差：∞</div>
+      <div class="quote-block">原来「慢下来」不是让时间变长。是让生命变厚。厚到时间搬不动它。</div>
+      <div class="quote-block">那个追赶时间的人，终于停了。</div>
+
+      <div class="tag-group" style="margin-top:1.4rem;">
+        <span class="tag tag-ink">共 29 句</span>
+        <span class="tag tag-ink">2022—2024</span>
+        <span class="tag tag-green">高中写作</span>
+        <span class="tag tag-red">大学创作</span>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ─── Footer ─── -->
+  <footer>
+    <span>苏简穆 · 田野笔记 · Field Notes Vol.I</span>
+    <span>2026.04 · 梁健毅 整理存档</span>
+  </footer>
+
+</div>
+
+<!-- ─── Back to top ─── -->
+<button class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  // Back to top visibility
+  const btn = document.getElementById('backTop');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  // Active nav highlight
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-list a');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(a => a.classList.remove('active'));
+        const active = document.querySelector(`.nav-list a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
