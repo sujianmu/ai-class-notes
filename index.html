@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI大课开营仪式 · 结构化笔记</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #111827;
+      --bg-card: #1a2235;
+      --bg-card-hover: #1e2a40;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --accent2: #00d2ff;
+      --accent3: #818cf8;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border: rgba(56, 189, 248, 0.2);
+      --border-bright: rgba(56, 189, 248, 0.5);
+      --gold: #fbbf24;
+      --green: #34d399;
+      --pink: #f472b6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-primary); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+    /* HEADER */
+    .site-header {
+      background: linear-gradient(135deg, #0d1117 0%, #0a192f 50%, #0d1117 100%);
+      border-bottom: 1px solid var(--border-bright);
+      padding: 2.5rem 1.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(56,189,248,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-tag {
+      display: inline-block;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      background: rgba(56,189,248,0.08);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 0.25rem 0.75rem;
+      margin-bottom: 1rem;
+    }
+    .site-header h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.3rem, 4vw, 2.2rem);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #00d2ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.3;
+      margin-bottom: 0.75rem;
+    }
+    .site-header .subtitle {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      letter-spacing: 0.05em;
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 4px;
+      padding: 0.25rem 0.75rem;
+    }
+    .meta-item .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 6px var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* LAYOUT */
+    .layout {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* TOC SIDEBAR */
+    .toc-sidebar {
+      width: 255px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 1.5rem 0;
+      border-right: 1px solid var(--border);
+      background: var(--bg-secondary);
+    }
+    .toc-sidebar::-webkit-scrollbar { width: 3px; }
+    .toc-label {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      color: var(--accent);
+      padding: 0 1.25rem 0.75rem;
+      text-transform: uppercase;
+    }
+    .toc-list { list-style: none; }
+    .toc-item a {
+      display: block;
+      padding: 0.4rem 1.25rem;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.82rem;
+      line-height: 1.5;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    .toc-item a:hover {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: rgba(56,189,248,0.05);
+    }
+    .toc-item.level3 a { padding-left: 2rem; font-size: 0.77rem; color: var(--text-muted); }
+    .toc-item.level3 a:hover { color: var(--accent); }
+    .toc-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0.6rem 1.25rem;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      min-width: 0;
+      padding: 2rem 2.5rem 4rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+      scroll-margin-top: 1.5rem;
+    }
+
+    /* HEADINGS */
+    .section-h2 {
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      font-weight: 700;
+      color: #fff;
+      padding: 1.1rem 1.5rem;
+      background: linear-gradient(135deg, rgba(56,189,248,0.1) 0%, rgba(129,140,248,0.04) 100%);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+    }
+    .section-h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .section-h3::before {
+      content: '';
+      display: inline-block;
+      width: 16px; height: 2px;
+      background: var(--accent);
+      border-radius: 1px;
+      flex-shrink: 0;
+    }
+    .section-h4 {
+      font-size: 0.93rem;
+      font-weight: 600;
+      color: var(--accent3);
+      margin: 1.25rem 0 0.6rem;
+    }
+
+    p {
+      color: var(--text-primary);
+      margin-bottom: 0.85rem;
+      line-height: 1.85;
+    }
+
+    /* LISTS */
+    ul, ol { padding-left: 0; list-style: none; margin-bottom: 1rem; }
+    ul li, ol li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin-bottom: 0.45rem;
+      color: var(--text-primary);
+      line-height: 1.75;
+    }
+    ul li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.72em;
+      top: 0.18em;
+    }
+    ol { counter-reset: list-counter; }
+    ol li { counter-increment: list-counter; padding-left: 2rem; }
+    ol li::before {
+      content: counter(list-counter);
+      position: absolute;
+      left: 0;
+      width: 1.35rem; height: 1.35rem;
+      background: rgba(56,189,248,0.1);
+      border: 1px solid rgba(56,189,248,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      top: 0.18rem;
+    }
+    ul li ul li::before { content: '·'; color: var(--text-muted); top: 0; }
+
+    strong { color: #fff; font-weight: 700; }
+    em { color: var(--accent3); font-style: normal; font-weight: 500; }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; margin-bottom: 1.5rem; border-radius: 8px; border: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+    thead th {
+      background: rgba(56,189,248,0.1);
+      color: var(--accent);
+      font-weight: 600;
+      padding: 0.7rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-bright);
+      white-space: nowrap;
+    }
+    tbody td {
+      padding: 0.65rem 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      color: var(--text-primary);
+      vertical-align: top;
+    }
+    tbody tr:hover td { background: rgba(56,189,248,0.04); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* CARDS */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.1rem 1.4rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.2s;
+    }
+    .card:hover { border-color: var(--border-bright); }
+    .card-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 0.7rem;
+    }
+
+    /* HIGHLIGHT */
+    .highlight {
+      border: 1px solid rgba(56,189,248,0.25);
+      background: rgba(56,189,248,0.06);
+      border-radius: 8px;
+      padding: 0.9rem 1.15rem;
+      margin: 1.1rem 0;
+    }
+    .highlight.warning { border-color: rgba(251,191,36,0.3); background: rgba(251,191,36,0.05); }
+    .highlight.success { border-color: rgba(52,211,153,0.3); background: rgba(52,211,153,0.05); }
+    .highlight-label {
+      font-size: 0.68rem;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+      margin-bottom: 0.45rem;
+    }
+
+    /* TAGS */
+    .tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      padding: 0.12rem 0.55rem;
+      border-radius: 3px;
+      margin-right: 0.35rem;
+      margin-bottom: 0.25rem;
+      vertical-align: middle;
+    }
+    .tag-blue { background: rgba(56,189,248,0.14); color: var(--accent); border: 1px solid rgba(56,189,248,0.3); }
+    .tag-purple { background: rgba(129,140,248,0.14); color: var(--accent3); border: 1px solid rgba(129,140,248,0.3); }
+    .tag-green { background: rgba(52,211,153,0.1); color: var(--green); border: 1px solid rgba(52,211,153,0.3); }
+    .tag-gold { background: rgba(251,191,36,0.1); color: var(--gold); border: 1px solid rgba(251,191,36,0.3); }
+
+    /* TIMELINE */
+    .timeline { display: flex; flex-direction: column; position: relative; padding-left: 2rem; }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.6rem; top: 0.5rem; bottom: 0.5rem;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent) 0%, var(--accent3) 100%);
+    }
+    .timeline-item { position: relative; padding: 0.55rem 0 0.55rem 1rem; }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -1.4rem; top: 50%;
+      transform: translateY(-50%);
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--bg-primary);
+      border: 2px solid var(--accent);
+      box-shadow: 0 0 8px var(--accent-glow);
+    }
+    .timeline-time { font-size: 0.76rem; color: var(--accent); font-weight: 600; }
+    .timeline-desc { font-size: 0.88rem; color: var(--text-primary); }
+
+    /* ACTION LIST */
+    .action-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      padding: 0.95rem 1.2rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 0.65rem;
+      transition: border-color 0.2s;
+    }
+    .action-item:hover { border-color: var(--border-bright); }
+    .action-num {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: rgba(56,189,248,0.1);
+      border: 1px solid rgba(56,189,248,0.35);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+    .action-body { flex: 1; }
+    .action-title { font-weight: 700; color: #fff; margin-bottom: 0.3rem; font-size: 0.93rem; }
+    .action-desc { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.7; }
+
+    /* QUOTES GRID */
+    .quotes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 0.85rem;
+    }
+    .quote-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(251,191,36,0.2);
+      border-radius: 8px;
+      padding: 1rem 1.15rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-card::before {
+      content: '"';
+      position: absolute;
+      top: -0.5rem; left: 0.65rem;
+      font-size: 3.5rem;
+      color: rgba(251,191,36,0.08);
+      font-family: serif;
+      line-height: 1;
+    }
+    .quote-card p {
+      font-size: 0.86rem;
+      color: var(--gold);
+      font-style: italic;
+      line-height: 1.7;
+      margin: 0;
+      position: relative;
+    }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, var(--border-bright) 0%, transparent 100%);
+      margin: 2.5rem 0;
+    }
+
+    /* MOBILE */
+    .mobile-toc-toggle {
+      display: none;
+      position: fixed;
+      bottom: 1.5rem; right: 1.5rem;
+      z-index: 200;
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(56,189,248,0.4);
+      font-weight: 700;
+    }
+    .mobile-toc-panel {
+      display: none;
+      position: fixed;
+      bottom: 4.5rem; right: 1.5rem;
+      z-index: 199;
+      background: var(--bg-card);
+      border: 1px solid var(--border-bright);
+      border-radius: 12px;
+      padding: 1rem;
+      max-height: 60vh;
+      overflow-y: auto;
+      width: 260px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    }
+    .mobile-toc-panel.open { display: block; }
+
+    .back-top {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: 'Orbitron', monospace;
+      letter-spacing: 0.1em;
+    }
+    .back-top:hover { color: var(--accent); }
+
+    @media (max-width: 900px) {
+      .toc-sidebar { display: none; }
+      .main-content { padding: 1.25rem 1.25rem 3rem; }
+      .mobile-toc-toggle { display: flex; align-items: center; justify-content: center; }
+    }
+    @media (max-width: 560px) {
+      .quotes-grid { grid-template-columns: 1fr; }
+      .meta-row { gap: 0.4rem; }
+      .section-h2 { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="top"></div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-tag">COURSE NOTES · AI BOOTCAMP · 2025</div>
+  <h1>大学生 AI 破局提效课<br>开营仪式</h1>
+  <p class="subtitle">结构化笔记 · 课程运营归档版</p>
+  <div class="meta-row">
+    <div class="meta-item"><span class="dot"></span> 主讲：何锦成</div>
+    <div class="meta-item"><span class="dot"></span> 直播于晚 9:00</div>
+    <div class="meta-item"><span class="dot"></span> 直播 + 录播 + 图文手册</div>
+    <div class="meta-item"><span class="dot"></span> 在读大学生（大一大二为主）</div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <nav class="toc-sidebar" aria-label="目录导航">
+    <div class="toc-label">目录导航</div>
+    <ul class="toc-list">
+      <li class="toc-item"><a href="#s1">一、课程概览</a></li>
+      <li class="toc-divider"></li>
+      <li class="toc-item"><a href="#s2">二、开营背景与意义</a></li>
+      <li class="toc-divider"></li>
+      <li class="toc-item"><a href="#s3">三、核心内容要点</a></li>
+      <li class="toc-item level3"><a href="#s3-1">1. 作品即名片</a></li>
+      <li class="toc-item level3"><a href="#s3-2">2. AI时代真正值钱的能力</a></li>
+      <li class="toc-item level3"><a href="#s3-3">3. 核心方法论：对齐</a></li>
+      <li class="toc-item level3"><a href="#s3-4">4. 核心方法论：压缩</a></li>
+      <li class="toc-item level3"><a href="#s3-5">5. 少干预，让AI发挥</a></li>
+      <li class="toc-item level3"><a href="#s3-6">6. AI进化阶段与个人定位</a></li>
+      <li class="toc-item level3"><a href="#s3-7">7. 复利工程</a></li>
+      <li class="toc-item level3"><a href="#s3-8">8. 课程安排与规则</a></li>
+      <li class="toc-divider"></li>
+      <li class="toc-item"><a href="#s4">四、金句摘录</a></li>
+      <li class="toc-divider"></li>
+      <li class="toc-item"><a href="#s5">五、学员行动清单</a></li>
+      <li class="toc-item level3"><a href="#s5-1">必做项</a></li>
+      <li class="toc-item level3"><a href="#s5-2">加分项</a></li>
+      <li class="toc-item level3"><a href="#s5-3">持续行动</a></li>
+    </ul>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- 一、课程概览 -->
+    <section class="section" id="s1">
+      <h2 class="section-h2">一、课程概览</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>项目</th><th>内容</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>活动名称</td><td>大学生 AI 破局提效课 开营仪式</td></tr>
+            <tr><td>主讲人</td><td>何锦成</td></tr>
+            <tr><td>开课时间</td><td>6月，直播于晚 9 点开始</td></tr>
+            <tr><td>参与对象</td><td>在读大学生（以大一、大二为主）</td></tr>
+            <tr><td>课程时长</td><td>正式课程 + 前哨站持续分享（数月）</td></tr>
+            <tr><td>授课形式</td><td>直播答疑 + 配套录播 + 图文行动手册</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 二、开营背景与意义 -->
+    <section class="section" id="s2">
+      <h2 class="section-h2">二、开营背景与意义</h2>
+
+      <div class="card">
+        <div class="card-title">为什么开这门课</div>
+        <p>大学生普遍使用 AI 工具，但大多停留在"聊天"层面，真正与学业和副业结合的很少。</p>
+        <p>瓶颈不在 AI 本身，而在<strong>使用者的思维和方法论</strong>。</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">课程定位</div>
+        <ul>
+          <li>面向大学场景，覆盖学业提效、竞赛、求职、副业等大多数高频问题</li>
+          <li>以<strong>实操</strong>为主，直播讲"道法"，录播行动手册覆盖"术器"</li>
+          <li>核心目标：帮每位学员搭建<strong>专属 AI 身份</strong>，实现 AI 驱动的复利成长</li>
+        </ul>
+      </div>
+
+      <div class="highlight">
+        <div class="highlight-label">学员调研数据</div>
+        <ul style="margin:0">
+          <li>大多数学员已在使用豆包等工具，AI 工具使用自评约 90%</li>
+          <li>约 90% 的学员反映 AI 回答稳定，但不知道如何实际与副业结合</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 三、核心内容要点 -->
+    <section class="section" id="s3">
+      <h2 class="section-h2">三、核心内容要点</h2>
+
+      <!-- 3.1 -->
+      <div id="s3-1" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">1. 作品即名片——建立"作品思维"</h3>
+        <div class="highlight warning">
+          <div class="highlight-label" style="color:var(--gold)">核心理念</div>
+          <p style="margin:0;font-size:0.95rem;color:var(--gold);font-weight:600">作品是一个人最好的自我介绍，AI 是帮你批量生产作品的外挂</p>
+        </div>
+        <p>大学里的一切积累都是作品：</p>
+        <ul>
+          <li>实习经历、竞赛奖项、项目产出、自媒体账号，乃至发出的朋友圈</li>
+          <li>筛简历、导师选学生，本质都是在评估"你做过什么"</li>
+          <li>AI 能帮你<strong>批量生产</strong>超越同龄人的作品数量和质量</li>
+        </ul>
+        <div class="highlight success">
+          <div class="highlight-label" style="color:var(--green)">行动建议</div>
+          <p style="margin:0;color:var(--text-primary)">找到校园内的先行者，拆解其路径，用 AI 复刻，在此基础上超越。</p>
+        </div>
+      </div>
+
+      <!-- 3.2 -->
+      <div id="s3-2" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">2. AI 时代真正值钱的能力</h3>
+        <p>以前做一件事 = <span class="tag tag-blue">1% 灵感</span> + <span class="tag tag-purple">99% 执行力</span></p>
+        <p>AI 时代已能代替 90% 的执行力，剩下真正值钱的是：</p>
+        <div class="card">
+          <div class="card-title">核心能力三角</div>
+          <ul>
+            <li><strong>视角</strong>——能看到别人看不到的机会</li>
+            <li><strong>审美</strong>——能判断什么是好的输出</li>
+            <li><strong>判断力</strong>——知道该做什么，比能做什么更值钱</li>
+          </ul>
+        </div>
+        <p>AI 不只是挣钱的技能，可以换来<strong>关系、影响力、老师的资源倾斜</strong>。</p>
+      </div>
+
+      <!-- 3.3 -->
+      <div id="s3-3" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">3. 核心方法论：对齐（Align）</h3>
+        <div class="card">
+          <div class="card-title">什么是对齐</div>
+          <p>准确理解"你是谁、你的问题是什么、你所处的情境是什么"。</p>
+          <p>对齐信息 = 告知 <strong>背景、角色、目的、关键指标</strong>——越清晰，AI 输出质量越高。</p>
+        </div>
+        <ul>
+          <li>如果 AI 没有理解真实意图，做得越多，浪费越多</li>
+          <li>AI 通过记忆机制将一次对齐复用于后续所有对话，节省反复说明的成本</li>
+        </ul>
+        <div class="highlight">
+          <div class="highlight-label">适用范围</div>
+          <p style="margin:0;color:var(--text-secondary)">无论使用豆包还是 Claude，<strong>对齐都是底层法则，N 年内不会过时</strong>。</p>
+        </div>
+      </div>
+
+      <!-- 3.4 -->
+      <div id="s3-4" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">4. 核心方法论：压缩（Compress）</h3>
+        <div class="card">
+          <div class="card-title">什么是压缩</div>
+          <p>把解决某类问题所需的信息、流程、工具，提炼成<strong>精简的结构化说明（Prompt / 工作流）</strong>。</p>
+        </div>
+        <ul>
+          <li>AI 越聪明，废话越多越困惑——给 AI 的信息要去噪，只保留核心文字</li>
+          <li>每完成一次任务，把流程"压缩"沉淀成可复用的 Prompt，形成<strong>复利效应</strong></li>
+          <li>一次调用，直接复用，无需重复造轮子</li>
+          <li>Prompt 积累越多，AI 能力边界越广、触手越长</li>
+        </ul>
+      </div>
+
+      <!-- 3.5 -->
+      <div id="s3-5" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">5. 使用 AI 的关键认知：少干预，让 AI 发挥</h3>
+        <div class="highlight warning">
+          <div class="highlight-label" style="color:var(--gold)">实测规律</div>
+          <p style="margin:0;color:var(--text-primary)">人类参与度控制在 <strong>20% 以内</strong>，AI 产出质量最佳；超过 30% 反而下降。</p>
+        </div>
+        <ul>
+          <li>原因：人的认知受过往经验局限；顶尖 AI 模型（如 Claude）的"搜索视野"已超过多数人</li>
+          <li><strong>正确姿势：</strong>给 AI 清晰的目标，让它自行选择最优路径，而非手把手指定每一步</li>
+          <li>对 AI 的错误纠正要落实为<strong>系统化动作</strong>：写入 / 更新 Prompt，而非只接受其"认错"</li>
+        </ul>
+      </div>
+
+      <!-- 3.6 -->
+      <div id="s3-6" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">6. AI 进化阶段与个人定位</h3>
+        <p>AI 能力快速演进：</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-time">两年前</div>
+            <div class="timeline-desc">像一位实习生</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-time">一年前</div>
+            <div class="timeline-desc">像一位同事</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-time">几个月前</div>
+            <div class="timeline-desc">像一支创业团队</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-time">当前</div>
+            <div class="timeline-desc">相当于一个<strong>百人规模的组织</strong></div>
+          </div>
+        </div>
+        <br>
+        <p>对学员的要求随之升级：</p>
+        <div style="display:flex;flex-wrap:wrap;gap:0.5rem;align-items:center;margin-bottom:1rem">
+          <span class="tag tag-blue">会用 AI</span>
+          <span style="color:var(--text-muted)">→</span>
+          <span class="tag tag-purple">带 AI 团队</span>
+          <span style="color:var(--text-muted)">→</span>
+          <span class="tag tag-green">搭 AI 系统</span>
+          <span style="color:var(--text-muted)">→</span>
+          <span class="tag tag-gold">定 AI 方向</span>
+        </div>
+        <div class="highlight success">
+          <div class="highlight-label" style="color:var(--green)">最佳窗口期</div>
+          <p style="margin:0;color:var(--text-primary)">大一大二学生处于<strong>最佳窗口期</strong>，有时间与 AI 共同成长。目标：成为能<strong>定方向</strong>的 AI 原住民，而非被 AI 带着走的被动者。</p>
+        </div>
+      </div>
+
+      <!-- 3.7 -->
+      <div id="s3-7" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">7. 复利工程（Compound Effect）</h3>
+        <ul>
+          <li>每次犯错后，通过<strong>系统化迭代</strong>修改 Prompt（写入 AI 错误日志），而非只接受道歉</li>
+          <li>每积累一个工作流（搜索、调研、视频制作、AI 生成等），AI 能力就提升一级</li>
+          <li>数据积累、工作流沉淀是个人<strong>护城河</strong></li>
+          <li>即使未来 AI 升级，沉淀越多的人<strong>上限和下限都更高</strong></li>
+        </ul>
+        <div class="highlight">
+          <div class="highlight-label">核心逻辑</div>
+          <p style="margin:0;color:var(--text-secondary)">窗口期会永远开着，越早装上外挂，复利越大。</p>
+        </div>
+      </div>
+
+      <!-- 3.8 -->
+      <div id="s3-8" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">8. 课程安排与规则</h3>
+        <div class="card">
+          <div class="card-title">课程结构</div>
+          <ul>
+            <li>若干节直播课，覆盖大学场景大多数高频问题，以实操为主</li>
+            <li><strong>前哨站分享：</strong>每周定期，同步 AI 最新动态、实战洞察，持续数月</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="card-title">运营规则</div>
+          <ul>
+            <li><strong>分组制：</strong>组内互帮互助，解决网络、工具安装等问题；组长享额外奖励</li>
+            <li><strong>作业制度：</strong>每节课布置作业，未完成者后续两个月前哨站资格取消</li>
+            <li><strong>评优与路演：</strong>优秀作业公示，结业答辩可申请项目路演，优秀作品上架展示</li>
+            <li><strong>答疑规则：</strong>先问 AI，解决了发群；每晚禁言后统一回复高价值问题</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 四、金句摘录 -->
+    <section class="section" id="s4">
+      <h2 class="section-h2">四、金句摘录</h2>
+      <div class="quotes-grid">
+        <div class="quote-card"><p>"作品是一个人最好的自我介绍，AI 是帮你批量生产作品的外挂"</p></div>
+        <div class="quote-card"><p>"大学最贵的不是学费，是你在错误的方向努力浪费了四年"</p></div>
+        <div class="quote-card"><p>"AI 的能力已经足够了，你才是需要升级的那个人"</p></div>
+        <div class="quote-card"><p>"知道该做什么，比能做什么更值钱"</p></div>
+        <div class="quote-card"><p>"你的同龄人还在学怎么用 AI，你就已经在用 AI 跑副业了"</p></div>
+        <div class="quote-card"><p>"AI 替代的是人，不是会用 AI 的人"</p></div>
+        <div class="quote-card"><p>"窗口期会永远开着，越早装上外挂，复利越大"</p></div>
+        <div class="quote-card"><p>"来时路就是你的作品"</p></div>
+      </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- 五、学员行动清单 -->
+    <section class="section" id="s5">
+      <h2 class="section-h2">五、学员行动清单</h2>
+
+      <div id="s5-1" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">必做项（今明两天内完成）</h3>
+        <div class="action-item">
+          <div class="action-num">1</div>
+          <div class="action-body">
+            <div class="action-title">搞定网络环境</div>
+            <div class="action-desc">解决科学上网问题，可在小组内互助或花小额费用请同学协助。</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">2</div>
+          <div class="action-body">
+            <div class="action-title">安装 Claude Code</div>
+            <div class="action-desc">按照课程提供的白皮书教程（含 Windows 和 Mac 双版本），逐步完成安装与 API 配置。</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">3</div>
+          <div class="action-body">
+            <div class="action-title">充值体验顶尖模型</div>
+            <div class="action-desc">先小额充值，体验 Claude 等顶尖模型与豆包的实际差距。</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">4</div>
+          <div class="action-body">
+            <div class="action-title">使用大学规划智能体生成四年规划</div>
+            <div class="action-desc">复制提示词发给 AI，如实回答问题，截图上传个人启发，发至群内。</div>
+          </div>
+        </div>
+        <div class="action-item">
+          <div class="action-num">5</div>
+          <div class="action-body">
+            <div class="action-title">用 AI 将逐字稿整理为结构化笔记</div>
+            <div class="action-desc">使用课程提供的逐字稿，输出结构化笔记并截图发群。</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="s5-2" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">加分项</h3>
+        <ul>
+          <li>将结构化笔记制作为<strong>可访问网页</strong>，链接发群（形式精美者重点表扬）</li>
+          <li>使用 <strong>Claude Code</strong> 完成四年规划，截图发群</li>
+        </ul>
+      </div>
+
+      <div id="s5-3" style="scroll-margin-top:1.5rem">
+        <h3 class="section-h3">持续行动</h3>
+        <ul>
+          <li>每节课后完成并提交作业，积累个人作品库</li>
+          <li>每次向 AI 提问前先自行尝试；群内提问时，提供已尝试的内容和具体错误信息</li>
+          <li>将每次任务流程压缩成 Prompt，沉淀个人 AI 能力模块</li>
+          <li>定期（每隔数月）更新使用大学规划智能体，根据新情况调整方向</li>
+          <li>关注 AI 前沿动态，跟踪 GitHub、X、Claude 等平台的优质内容</li>
+        </ul>
+      </div>
+    </section>
+
+    <a href="#top" class="back-top">↑ 返回顶部</a>
+
+  </main>
+</div>
+
+<!-- MOBILE TOC -->
+<button class="mobile-toc-toggle" onclick="document.getElementById('mobileToc').classList.toggle('open')" aria-label="目录">≡</button>
+<div class="mobile-toc-panel" id="mobileToc">
+  <div class="toc-label" style="padding-left:0;margin-bottom:0.5rem">目录</div>
+  <ul class="toc-list">
+    <li class="toc-item"><a href="#s1" onclick="document.getElementById('mobileToc').classList.remove('open')">一、课程概览</a></li>
+    <li class="toc-item"><a href="#s2" onclick="document.getElementById('mobileToc').classList.remove('open')">二、开营背景与意义</a></li>
+    <li class="toc-item"><a href="#s3" onclick="document.getElementById('mobileToc').classList.remove('open')">三、核心内容要点</a></li>
+    <li class="toc-item level3"><a href="#s3-1" onclick="document.getElementById('mobileToc').classList.remove('open')">1. 作品即名片</a></li>
+    <li class="toc-item level3"><a href="#s3-2" onclick="document.getElementById('mobileToc').classList.remove('open')">2. AI时代真正值钱的能力</a></li>
+    <li class="toc-item level3"><a href="#s3-3" onclick="document.getElementById('mobileToc').classList.remove('open')">3. 核心方法论：对齐</a></li>
+    <li class="toc-item level3"><a href="#s3-4" onclick="document.getElementById('mobileToc').classList.remove('open')">4. 核心方法论：压缩</a></li>
+    <li class="toc-item level3"><a href="#s3-5" onclick="document.getElementById('mobileToc').classList.remove('open')">5. 少干预，让AI发挥</a></li>
+    <li class="toc-item level3"><a href="#s3-6" onclick="document.getElementById('mobileToc').classList.remove('open')">6. AI进化阶段与个人定位</a></li>
+    <li class="toc-item level3"><a href="#s3-7" onclick="document.getElementById('mobileToc').classList.remove('open')">7. 复利工程</a></li>
+    <li class="toc-item level3"><a href="#s3-8" onclick="document.getElementById('mobileToc').classList.remove('open')">8. 课程安排与规则</a></li>
+    <li class="toc-item"><a href="#s4" onclick="document.getElementById('mobileToc').classList.remove('open')">四、金句摘录</a></li>
+    <li class="toc-item"><a href="#s5" onclick="document.getElementById('mobileToc').classList.remove('open')">五、学员行动清单</a></li>
+  </ul>
+</div>
+
+</body>
+</html>
