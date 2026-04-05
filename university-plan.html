@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多元宇宙大学规划报告</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+  :root {
+    --bg-deep: #080816;
+    --bg-card: rgba(18, 14, 45, 0.85);
+    --bg-nav: rgba(10, 8, 30, 0.95);
+    --primary: #6C63FF;
+    --secondary: #A78BFA;
+    --accent: #38BDF8;
+    --accent2: #F472B6;
+    --text: #E2E8F0;
+    --text-muted: #94A3B8;
+    --border: rgba(108, 99, 255, 0.2);
+    --glow: 0 0 30px rgba(108, 99, 255, 0.3);
+    --glow-strong: 0 0 60px rgba(108, 99, 255, 0.5);
+    --nav-width: 260px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* 星空背景 */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(108, 99, 255, 0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, rgba(167, 139, 250, 0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 60% 80%, rgba(56, 189, 248, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== 导航栏 ===== */
+  nav {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: var(--nav-width);
+    background: var(--bg-nav);
+    border-right: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow-y: auto;
+    transition: transform 0.3s ease;
+  }
+
+  nav::-webkit-scrollbar { width: 3px; }
+  nav::-webkit-scrollbar-track { background: transparent; }
+  nav::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 2px; }
+
+  .nav-logo {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo-title {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.4;
+  }
+
+  .nav-logo-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .nav-links {
+    padding: 16px 0;
+    flex: 1;
+  }
+
+  .nav-item {
+    display: block;
+    padding: 10px 24px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+    border-left: 2px solid transparent;
+    line-height: 1.5;
+  }
+
+  .nav-item:hover,
+  .nav-item.active {
+    color: var(--secondary);
+    border-left-color: var(--primary);
+    background: rgba(108, 99, 255, 0.08);
+  }
+
+  .nav-item .nav-icon { margin-right: 8px; }
+
+  /* ===== 主内容区 ===== */
+  main {
+    margin-left: var(--nav-width);
+    padding: 48px 48px 80px;
+    min-height: 100vh;
+    position: relative;
+    z-index: 1;
+    max-width: calc(var(--nav-width) + 900px);
+  }
+
+  /* ===== 页面标题 ===== */
+  .page-hero {
+    padding: 60px 0 48px;
+    position: relative;
+  }
+
+  .page-hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--primary), transparent);
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--primary);
+    border: 1px solid rgba(108, 99, 255, 0.4);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .hero-title {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 700;
+    line-height: 1.3;
+    background: linear-gradient(135deg, #fff 0%, var(--secondary) 50%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+  }
+
+  .hero-summary {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    max-width: 700px;
+    border-left: 3px solid var(--primary);
+    padding-left: 16px;
+    margin-top: 20px;
+  }
+
+  /* ===== 章节 ===== */
+  section {
+    margin-top: 64px;
+    scroll-margin-top: 32px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .section-num {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+    box-shadow: var(--glow);
+  }
+
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff, var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ===== 卡片 ===== */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(16px);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    /* 初始隐藏，等 JS 触发 */
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  .card.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .card:hover {
+    box-shadow: var(--glow);
+    border-color: rgba(108, 99, 255, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--secondary);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title::before {
+    content: '';
+    width: 3px; height: 16px;
+    background: linear-gradient(180deg, var(--primary), var(--secondary));
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  /* ===== 表格 ===== */
+  .table-wrap { overflow-x: auto; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th {
+    background: rgba(108, 99, 255, 0.15);
+    color: var(--secondary);
+    font-weight: 600;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(108, 99, 255, 0.08);
+    color: var(--text);
+    line-height: 1.6;
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(108, 99, 255, 0.05); }
+
+  /* ===== 列表 ===== */
+  ul, ol {
+    padding-left: 0;
+    list-style: none;
+  }
+
+  li {
+    padding: 6px 0 6px 20px;
+    position: relative;
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-size: 12px;
+  }
+
+  ol { counter-reset: item; }
+  ol li { counter-increment: item; }
+  ol li::before {
+    content: counter(item) '.';
+    position: absolute;
+    left: 0;
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  li strong {
+    color: var(--secondary);
+    font-weight: 600;
+  }
+
+  /* ===== 三端卡片特殊样式 ===== */
+  .path-card {
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease;
+  }
+
+  .path-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .path-safe {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(16, 185, 129, 0.03));
+    border: 1px solid rgba(16, 185, 129, 0.25);
+  }
+  .path-safe:hover { box-shadow: 0 0 30px rgba(16, 185, 129, 0.2); }
+  .path-safe .path-icon { color: #10B981; }
+
+  .path-explore {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.08), rgba(56, 189, 248, 0.03));
+    border: 1px solid rgba(56, 189, 248, 0.25);
+  }
+  .path-explore:hover { box-shadow: 0 0 30px rgba(56, 189, 248, 0.2); }
+  .path-explore .path-icon { color: #38BDF8; }
+
+  .path-crazy {
+    background: linear-gradient(135deg, rgba(244, 114, 182, 0.08), rgba(244, 114, 182, 0.03));
+    border: 1px solid rgba(244, 114, 182, 0.25);
+  }
+  .path-crazy:hover { box-shadow: 0 0 30px rgba(244, 114, 182, 0.2); }
+  .path-crazy .path-icon { color: #F472B6; }
+
+  .path-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .path-icon { font-size: 24px; }
+
+  .path-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  .path-badge {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-safe { background: rgba(16, 185, 129, 0.15); color: #10B981; }
+  .badge-explore { background: rgba(56, 189, 248, 0.15); color: #38BDF8; }
+  .badge-crazy { background: rgba(244, 114, 182, 0.15); color: #F472B6; }
+
+  /* ===== 时间轴 ===== */
+  .timeline {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 8px; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--primary), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 24px;
+    opacity: 0;
+    transform: translateX(-12px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .timeline-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px; top: 6px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--primary);
+    box-shadow: 0 0 10px var(--primary);
+  }
+
+  .timeline-phase {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--primary);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .timeline-content {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    backdrop-filter: blur(12px);
+  }
+
+  .timeline-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--secondary);
+    margin-bottom: 8px;
+  }
+
+  /* ===== 原则卡片 ===== */
+  .principle-card {
+    display: flex;
+    gap: 16px;
+    padding: 20px 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 16px;
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .principle-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .principle-card:hover {
+    border-color: rgba(108, 99, 255, 0.35);
+    box-shadow: var(--glow);
+  }
+
+  .principle-num {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: #fff;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .principle-text {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text);
+  }
+
+  /* ===== 收尾引言 ===== */
+  .closing-quote {
+    margin-top: 40px;
+    padding: 28px 32px;
+    background: linear-gradient(135deg, rgba(108, 99, 255, 0.1), rgba(167, 139, 250, 0.05));
+    border: 1px solid rgba(108, 99, 255, 0.3);
+    border-radius: 16px;
+    font-size: 15px;
+    line-height: 1.9;
+    color: var(--text);
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .closing-quote.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .closing-quote::before {
+    content: '"';
+    position: absolute;
+    top: -10px; left: 20px;
+    font-size: 60px;
+    color: var(--primary);
+    opacity: 0.4;
+    font-family: serif;
+    line-height: 1;
+  }
+
+  /* ===== 移动端 ===== */
+  .menu-toggle {
+    display: none;
+    position: fixed;
+    top: 16px; left: 16px;
+    z-index: 200;
+    width: 40px; height: 40px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(12px);
+  }
+
+  .menu-toggle span {
+    display: block;
+    width: 18px; height: 2px;
+    background: var(--secondary);
+    margin: 3px 0;
+    transition: all 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    nav {
+      transform: translateX(-100%);
+    }
+    nav.open {
+      transform: translateX(0);
+      box-shadow: 4px 0 40px rgba(0,0,0,0.5);
+    }
+    main {
+      margin-left: 0;
+      padding: 72px 20px 60px;
+    }
+    .menu-toggle { display: flex; }
+  }
+
+  /* 小屏适配 */
+  @media (max-width: 1100px) {
+    main { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 移动端菜单按钮 -->
+<button class="menu-toggle" id="menuToggle" aria-label="菜单">
+  <span></span><span></span><span></span>
+</button>
+
+<!-- 左侧导航栏 -->
+<nav id="sidebar">
+  <div class="nav-logo">
+    <div class="nav-logo-title">多元宇宙<br>大学规划报告</div>
+    <div class="nav-logo-sub">基层建设路径 · 2026</div>
+  </div>
+  <div class="nav-links">
+    <a class="nav-item" href="#hero"><span class="nav-icon">🏠</span>概览</a>
+    <a class="nav-item" href="#profile"><span class="nav-icon">👤</span>一、个人画像与底牌</a>
+    <a class="nav-item" href="#paths"><span class="nav-icon">🌌</span>二、三端路径规划</a>
+    <a class="nav-item" href="#timeline"><span class="nav-icon">📅</span>三、关键时间轴</a>
+    <a class="nav-item" href="#principles"><span class="nav-icon">🎯</span>四、三条原则</a>
+  </div>
+</nav>
+
+<!-- 主内容 -->
+<main>
+
+  <!-- Hero -->
+  <div class="page-hero" id="hero">
+    <div class="hero-tag">University Planner · 多元宇宙版</div>
+    <h1 class="hero-title">多元宇宙大学规划报告<br>回乡建设的基层突围战</h1>
+    <p class="hero-summary">
+      你的方向极度清晰，落地点非常具体（中山市坦洲镇裕洲村）。你最大的优势是"本地根基 + 真实基层经历 + 强关系资源"，最大的课题是如何在毕业前补齐硬件短板（英语四级）、平稳渡过经济和家庭内耗的约束，最终以不可替代的身份回到家乡基层。
+    </p>
+  </div>
+
+  <!-- 一、个人画像 -->
+  <section id="profile">
+    <div class="section-header">
+      <div class="section-num">一</div>
+      <h2 class="section-title">个人画像与底牌盘点</h2>
+    </div>
+
+    <div class="card">
+      <div class="card-title">基础面板</div>
+      <div class="table-wrap">
+        <table>
+          <tr><th>维度</th><th>详情</th></tr>
+          <tr><td>身份</td><td>广东海洋大学（双非）社会学 大二下学期</td></tr>
+          <tr><td>成绩</td><td>GPA 68/128（中等偏后）</td></tr>
+          <tr><td>英语</td><td>四级未过（本学期准备冲刺）</td></tr>
+          <tr><td>身体状况</td><td>腰间盘轻度突出，过急性期，好转一半（需维持养伤，并确认体检标准）</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">核心经历</div>
+      <ul>
+        <li>村政府 1 个月暑期活动类实习（负责夏令营举办）</li>
+        <li>188 小时村政府志愿服务时长</li>
+        <li>国家级大创团队立项（第二核心）</li>
+        <li>新文科大赛国奖团队（第三核心）</li>
+        <li>学院团委组织部副部长</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">资源与约束（真实底牌）</div>
+      <ul>
+        <li><strong>强关系（极品牌）：</strong>亲戚在村委/镇政府就职；姨丈在坦洲镇做饲料生意，有广泛的农业上下游及社会人脉网</li>
+        <li><strong>经济硬约束（红线）：</strong>家庭无力支撑考研，必须本科毕业直接就业</li>
+        <li><strong>家庭内耗：</strong>父亲缺位且有负面影响，家族存在内斗（策略：记录、隔离、重大决策时才考虑，避免日常精神内耗）</li>
+        <li><strong>政治面貌误区：</strong>大一错过入党申请，但这<strong>并不致命</strong>。村镇合同工绝大多数不设党员门槛，且完全可以在"三支一扶"期间或工作后走单位入党流程</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 二、三端路径 -->
+  <section id="paths">
+    <div class="section-header">
+      <div class="section-num">二</div>
+      <h2 class="section-title">三端路径规划（多元宇宙分析）</h2>
+    </div>
+
+    <div class="path-card path-safe">
+      <div class="path-header">
+        <span class="path-icon">🛡️</span>
+        <span class="path-title">安全端：三支一扶 → 裕洲村合同工</span>
+        <span class="path-badge badge-safe">分配 70% 精力</span>
+      </div>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">这是最稳妥、最有保障的主线任务。</p>
+      <ul>
+        <li><strong>路径设计：</strong>本科毕业报名广东省"三支一扶" → 争取分配到中山市/坦洲镇 → 服务2年（期间有工资补贴约3-4k，够生活；同步走入党流程）→ 期满后以"本地人+基层工作经验+三支一扶加分"竞争村委合同工岗位</li>
+        <li><strong>核心逻辑：</strong>合同工岗位往往"坑少萝卜多"，直接等毕业空窗期太长且风险大。用"三支一扶"作为带薪跳板，既积攒体制内正式基层资历，又能平滑过渡</li>
+        <li><strong>备用方案：</strong>如果体检因腰间盘突出受阻，或未分到中山，则直接启动备选方案，靠亲戚内推寻找对体检无硬性要求的村镇非编岗位</li>
+      </ul>
+    </div>
+
+    <div class="path-card path-explore">
+      <div class="path-header">
+        <span class="path-icon">🔭</span>
+        <span class="path-title">探索端：社会学方法论 → 基层治理专家</span>
+        <span class="path-badge badge-explore">分配 20% 精力</span>
+      </div>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">不要只把自己定位为"办活动的干事"。</p>
+      <ul>
+        <li><strong>路径设计：</strong>把大创经验和社会学专业知识结合，大三毕业论文直接以"坦洲镇/裕洲村社区治理或乡村振兴"为题做田野调查</li>
+        <li><strong>核心逻辑：</strong>村委里能干活的人多，但懂"问卷设计、数据分析、政策解读、报告撰写"的人极少。拿着一份本村的数据研究报告去面试，是降维打击</li>
+      </ul>
+    </div>
+
+    <div class="path-card path-crazy">
+      <div class="path-header">
+        <span class="path-icon">🚀</span>
+        <span class="path-title">疯狂端：姨丈关系网 × AI技能 → 乡镇数字化</span>
+        <span class="path-badge badge-crazy">分配 10% 精力</span>
+      </div>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">应对未来不确定性的奇招。</p>
+      <ul>
+        <li><strong>路径设计：</strong>你母亲支持你接触AI，你姨丈有下沉市场的真实商业网络（饲料生意、供应商、买家）。平时留意乡镇小生意主和村委的痛点，用AI工具帮他们解决问题</li>
+        <li><strong>核心逻辑：</strong>在农村下沉市场，AI和实际业务的结合是真空地带。万一体制内路径受限，这条路有潜力跑出一个能在当地立足的小型服务业务</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 三、时间轴 -->
+  <section id="timeline">
+    <div class="section-header">
+      <div class="section-num">三</div>
+      <h2 class="section-title">关键时间轴与具体操作手册</h2>
+    </div>
+
+    <div class="timeline">
+
+      <div class="timeline-item">
+        <div class="timeline-phase">📌 眼前立案 · 大二下学期（破局点）</div>
+        <div class="timeline-content">
+          <div class="timeline-title">4 个关键动作</div>
+          <ol>
+            <li><strong>约饭取经：</strong>和在村委就职的亲戚深聊一次。明确问："村里合同工一般什么时候招？看重什么条件？我这两年需要准备什么？"（获取第一手情报）</li>
+            <li><strong>死磕四级：</strong>报名6月英语四级考试，每天固定刷真题。这是你简历上唯一好补的硬伤，必须在这个学期关上这个缺口</li>
+            <li><strong>话术封装：</strong>把"国家级大创"和"新文科国奖"经历，写成一段3分钟的自我介绍——强调你"策划了什么、解决了什么问题、写了什么报告"</li>
+            <li><strong>健康确认：</strong>拿着近期的复诊结果，直接问医生："我目前的恢复情况，未来能否通过公务员标准的入职体检？"做到心中有数</li>
+          </ol>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-phase">📅 中期发育 · 大二暑假 - 大三下学期</div>
+        <div class="timeline-content">
+          <div class="timeline-title">分阶段目标</div>
+          <ul>
+            <li><strong>大二暑假 — 二刷实习：</strong>争取再次进入村政府/镇政府，但这次目标不是打杂，而是"独立负责或深度参与一个具体项目"，留下能写进简历的工作成果</li>
+            <li><strong>大三上学期 — 论文破题：</strong>与导师沟通，确定毕业论文方向为家乡的基层治理，开始收集裕洲村的基础数据</li>
+            <li><strong>大三下学期 — 政策雷达：</strong>关注本年度"三支一扶"的招募公告，研究报名条件、岗位分布（中山市名额）及加分政策</li>
+            <li><strong>寻路导师：</strong>通过辅导员或亲戚，加一个正在中山市做"三支一扶"或刚转合同工的学长学姐微信，了解真实待遇和工作常态</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-phase">🏁 冲刺收网 · 大四全学年</div>
+        <div class="timeline-content">
+          <div class="timeline-title">最终冲刺</div>
+          <ul>
+            <li><strong>大四上学期：</strong>完成基于家乡数据的毕业论文，这将是你面试时最强力的"投名状"</li>
+            <li><strong>大四下学期（4-6月）：</strong>正式报名"三支一扶"，志愿锁定中山市。如果身体条件不允许，全面启动亲戚关系网，打听一切可能开放的村/镇合同工岗位</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 四、三条原则 -->
+  <section id="principles">
+    <div class="section-header">
+      <div class="section-num">四</div>
+      <h2 class="section-title">给你的最后三条原则</h2>
+    </div>
+
+    <div class="principle-card">
+      <div class="principle-num">1</div>
+      <div class="principle-text">
+        <strong>停止内耗"入党时机"：</strong>基层看重的是"能干活的本地人"，而不是"啥都不会的党员"。踏实做你的大创和实习，工作之后单位党支部自然能走流程。
+      </div>
+    </div>
+
+    <div class="principle-card">
+      <div class="principle-num">2</div>
+      <div class="principle-text">
+        <strong>保持情绪防火墙：</strong>家里内斗的事情，坚持你现在的策略——只记录不掺和。把所有精力收拢到"拿到四级证书"和"搞定一份有分量的村委实习"上。
+      </div>
+    </div>
+
+    <div class="principle-card">
+      <div class="principle-num">3</div>
+      <div class="principle-text">
+        <strong>保护好腰椎：</strong>身体是回基层干活的本钱，避免搬重物和久坐，这比任何证书都重要。
+      </div>
+    </div>
+
+    <div class="closing-quote">
+      你的信仰是"助力实现共产主义社会"，你的落点是"坦洲镇裕洲村"。在这个宏大与具体的交汇点上，你已经比90%迷茫的大学生走得更远。去把四级考过，去和亲戚吃那顿饭，路就通了。
+    </div>
+  </section>
+
+</main>
+
+<script>
+  // 导航高亮
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('section, .page-hero');
+
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navItems.forEach(item => {
+          item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
+
+  sections.forEach(s => navObserver.observe(s));
+
+  // 卡片淡入
+  const fadeEls = document.querySelectorAll('.card, .path-card, .timeline-item, .principle-card, .closing-quote');
+
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        // 根据元素在视口中出现的顺序加延迟
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, 80);
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  fadeEls.forEach(el => fadeObserver.observe(el));
+
+  // 导航平滑跳转
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(item.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // 移动端关闭侧边栏
+      sidebar.classList.remove('open');
+    });
+  });
+
+  // 移动端菜单
+  const menuToggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+
+  menuToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+  });
+
+  // 点击内容区关闭侧边栏（移动端）
+  document.querySelector('main').addEventListener('click', () => {
+    sidebar.classList.remove('open');
+  });
+</script>
+
+</body>
+</html>
