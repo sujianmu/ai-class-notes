@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI分身安装记录 · 苏简穆 2026-04-06</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:       #1a2e22;
+    --sage:      #3d6b52;
+    --cinnabar:  #c0392b;
+    --cream:     #f5f0e8;
+    --parchment: #ede7d9;
+    --faded:     #b8a99a;
+    --line:      #d6cdc0;
+    --body-text: #2c3e30;
+    --shadow-sm:    0 2px 8px rgba(26,46,34,.08), 0 1px 3px rgba(26,46,34,.06);
+    --shadow-md:    0 6px 24px rgba(26,46,34,.10), 0 2px 8px rgba(26,46,34,.07);
+    --shadow-hover: 0 12px 36px rgba(26,46,34,.14), 0 4px 12px rgba(26,46,34,.09);
+    --r: 10px;
+    --font-display: 'Noto Serif SC', 'Georgia', serif;
+    --font-body:    'Book Antiqua', 'Palatino Linotype', 'Palatino', 'Noto Serif SC', serif;
+    --font-mono:    'Courier New', 'Courier', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 17px; scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--cream);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+    font-family: var(--font-body);
+    color: var(--body-text);
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  .page-wrapper {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "header header"
+      "nav    main"
+      "footer footer";
+    max-width: 1160px;
+    margin: 0 auto;
+    min-height: 100vh;
+  }
+
+  /* Header */
+  header {
+    grid-area: header;
+    position: relative;
+    background: var(--parchment);
+    border-bottom: 1px solid var(--line);
+    padding: 3.5rem 3rem;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image: repeating-linear-gradient(to bottom, transparent 27px, var(--line) 27px, var(--line) 28px);
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  header::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 2.2rem;
+    width: 2px;
+    background: var(--cinnabar);
+    opacity: 0.6;
+  }
+  .header-inner {
+    position: relative; z-index: 1;
+    padding-left: 1.5rem;
+  }
+  .header-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 0.6rem;
+  }
+  .header-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+  }
+  .header-title em { font-style: italic; color: var(--sage); }
+  .header-sub {
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+  }
+  .header-sub span {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--faded);
+    letter-spacing: 0.08em;
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .dot {
+    display: inline-block;
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--cinnabar);
+    opacity: 0.7;
+  }
+  .stamp {
+    position: absolute;
+    right: 3rem; top: 50%;
+    transform: translateY(-50%) rotate(-12deg);
+    width: 90px; height: 90px;
+    border: 2.5px solid var(--cinnabar);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display);
+    font-size: 0.85rem; font-weight: 700;
+    color: var(--cinnabar);
+    letter-spacing: 0.05em; text-align: center; line-height: 1.3;
+    opacity: 0.75; user-select: none; z-index: 2;
+  }
+  .stamp::before {
+    content: '';
+    position: absolute; inset: 4px;
+    border: 1px solid var(--cinnabar);
+    border-radius: 50%; opacity: 0.5;
+  }
+
+  /* Nav */
+  nav {
+    grid-area: nav;
+    padding: 2rem 1.2rem 2rem 1.5rem;
+    border-right: 1px solid var(--line);
+    position: sticky; top: 0;
+    align-self: start; height: 100vh;
+    overflow-y: auto;
+  }
+  .nav-label {
+    font-family: var(--font-mono);
+    font-size: 0.62rem; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--faded);
+    margin-bottom: 1rem; padding-bottom: 0.5rem;
+    border-bottom: 1px dotted var(--line);
+  }
+  .nav-list { list-style: none; border-left: 2px solid var(--line); }
+  .nav-item { position: relative; }
+  .nav-link {
+    display: block; padding: 0.5rem 0.8rem;
+    font-family: var(--font-body); font-size: 0.85rem;
+    color: var(--faded); text-decoration: none;
+    border-radius: 0 4px 4px 0;
+    transition: color 0.2s, padding-left 0.2s, background 0.2s;
+    line-height: 1.4;
+  }
+  .nav-link:hover { color: var(--sage); padding-left: 1.2rem; background: rgba(61,107,82,.05); }
+  .nav-link.active { color: var(--sage); font-weight: 500; }
+  .nav-link.active::before {
+    content: '';
+    position: absolute; left: -2px; top: 50%;
+    transform: translateY(-50%);
+    width: 2px; height: 60%;
+    background: var(--cinnabar); border-radius: 1px;
+  }
+  .nav-char {
+    font-family: var(--font-mono); font-size: 0.7rem;
+    color: var(--cinnabar); opacity: 0.7; margin-right: 0.3em;
+  }
+
+  /* Main */
+  main { grid-area: main; padding: 2.2rem 2.5rem; }
+
+  /* Cards */
+  .section-card {
+    background: var(--parchment);
+    border-radius: var(--r);
+    box-shadow: var(--shadow-sm);
+    padding: 2.2rem 2.4rem;
+    margin-bottom: 1.8rem;
+    border: 1px solid rgba(214,205,192,.6);
+    position: relative; overflow: hidden;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    background-image:
+      repeating-linear-gradient(to bottom, transparent 27px, rgba(214,205,192,.4) 27px, rgba(214,205,192,.4) 28px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    opacity: 0;
+    animation: fadeUp 0.5s ease both;
+  }
+  .section-card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .section-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px; background: var(--sage);
+    border-radius: var(--r) 0 0 var(--r);
+  }
+  .section-card.accent-red::before { background: var(--cinnabar); }
+  .section-card.accent-mixed::before { background: linear-gradient(to bottom, var(--sage), var(--cinnabar)); }
+
+  .section-card:nth-child(1) { animation-delay: .05s; }
+  .section-card:nth-child(2) { animation-delay: .10s; }
+  .section-card:nth-child(3) { animation-delay: .15s; }
+  .section-card:nth-child(4) { animation-delay: .20s; }
+  .section-card:nth-child(5) { animation-delay: .25s; }
+  .section-card:nth-child(6) { animation-delay: .30s; }
+  .section-card:nth-child(7) { animation-delay: .35s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-eyebrow {
+    font-family: var(--font-mono); font-size: 0.65rem;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--faded); margin-bottom: 0.5rem;
+  }
+  .section-title {
+    font-family: var(--font-display); font-size: 1.45rem;
+    font-weight: 700; color: var(--ink);
+    margin-bottom: 1.4rem; line-height: 1.3;
+  }
+
+  /* Dialog */
+  .dialog-block { margin-bottom: 1.4rem; }
+  .dialog-block:last-child { margin-bottom: 0; }
+  .speaker {
+    font-family: var(--font-mono); font-size: 0.72rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .speaker::before {
+    content: '';
+    display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  }
+  .speaker.user { color: var(--cinnabar); }
+  .speaker.user::before { background: var(--cinnabar); }
+  .speaker.ai { color: var(--sage); }
+  .speaker.ai::before { background: var(--sage); }
+  .bubble {
+    padding: 0.9rem 1.1rem; border-radius: 6px;
+    font-size: 0.95rem; line-height: 1.8;
+  }
+  .bubble.user-bubble {
+    background: rgba(192,57,43,.06);
+    border-left: 2px solid rgba(192,57,43,.3);
+  }
+  .bubble.ai-bubble {
+    background: rgba(61,107,82,.06);
+    border-left: 2px solid rgba(61,107,82,.3);
+  }
+  .bubble ul { margin: 0.5rem 0 0.5rem 1.2rem; }
+  .bubble li { font-size: 0.92rem; line-height: 1.7; margin-bottom: 0.2rem; }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    padding: 0.2rem 0.6rem; border-radius: 20px;
+    font-family: var(--font-mono); font-size: 0.75rem;
+    letter-spacing: 0.06em; margin: 0 0.2rem 0.3rem 0;
+  }
+  .tag-green { background: rgba(61,107,82,.12); color: var(--sage); border: 1px solid rgba(61,107,82,.25); }
+  .tag-red   { background: rgba(192,57,43,.1);  color: var(--cinnabar); border: 1px solid rgba(192,57,43,.2); }
+  .tag-ink   { background: rgba(26,46,34,.08);  color: var(--ink); border: 1px solid rgba(26,46,34,.15); }
+  .tag-faded { background: rgba(184,169,154,.2); color: var(--faded); border: 1px solid rgba(184,169,154,.4); }
+
+  /* Info grid */
+  .info-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.8rem; margin-top: 1rem;
+  }
+  .info-cell {
+    background: rgba(255,255,255,.55); border-radius: 6px;
+    padding: 0.7rem 0.9rem; border: 1px solid rgba(214,205,192,.5);
+  }
+  .info-cell-label {
+    font-family: var(--font-mono); font-size: 0.62rem;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--faded); margin-bottom: 0.3rem;
+  }
+  .info-cell-value { font-size: 0.88rem; color: var(--ink); line-height: 1.5; }
+
+  blockquote {
+    border-left: 3px solid var(--cinnabar);
+    background: rgba(192,57,43,.04);
+    padding: 0.8rem 1.1rem;
+    border-radius: 0 6px 6px 0;
+    margin: 1rem 0; font-style: italic;
+    color: var(--sage); font-size: 0.92rem;
+  }
+
+  .divider { border: none; border-top: 1px dotted var(--line); margin: 1.4rem 0; }
+
+  .activation-summary {
+    background: rgba(61,107,82,.08);
+    border: 1px solid rgba(61,107,82,.2);
+    border-radius: 8px; padding: 1.4rem 1.6rem; margin-top: 1.2rem;
+  }
+  .activation-summary p { font-size: 0.92rem; line-height: 1.75; margin-bottom: 0.5rem; }
+  .activation-summary p:last-child { margin-bottom: 0; }
+
+  /* Footer */
+  footer {
+    grid-area: footer;
+    border-top: 1px solid var(--line); padding: 1.2rem 3rem;
+    background: var(--parchment);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 0.5rem;
+  }
+  footer span {
+    font-family: var(--font-mono); font-size: 0.7rem;
+    color: var(--faded); letter-spacing: 0.08em;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .page-wrapper {
+      grid-template-columns: 1fr;
+      grid-template-areas: "header" "nav" "main" "footer";
+    }
+    nav {
+      height: auto; position: static;
+      border-right: none; border-bottom: 1px solid var(--line);
+      padding: 1rem 1.5rem;
+    }
+    .nav-list { display: flex; flex-wrap: wrap; gap: 0.3rem; border-left: none; }
+    .nav-link { border-radius: 4px; padding: 0.3rem 0.7rem; }
+    .nav-link.active::before { display: none; }
+    .stamp { display: none; }
+    .info-grid { grid-template-columns: 1fr; }
+    .header-sub { gap: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+  <header>
+    <div class="header-inner">
+      <div class="header-eyebrow">田野笔记 · 存档记录</div>
+      <h1 class="header-title">AI分身<em>安装</em>全记录</h1>
+      <div class="header-sub">
+        <span><span class="dot"></span>苏简穆</span>
+        <span><span class="dot"></span>2026-04-06</span>
+        <span><span class="dot"></span>广东海洋大学 · 社会学大二</span>
+        <span><span class="dot"></span>Claude Code 会话</span>
+      </div>
+    </div>
+    <div class="stamp">分身<br>激活</div>
+  </header>
+
+  <nav>
+    <div class="nav-label">目录导航</div>
+    <ul class="nav-list" id="nav-list">
+      <li class="nav-item"><a href="#s1" class="nav-link"><span class="nav-char">01</span>读取说明</a></li>
+      <li class="nav-item"><a href="#s2" class="nav-link"><span class="nav-char">02</span>执行安装</a></li>
+      <li class="nav-item"><a href="#s3" class="nav-link"><span class="nav-char">03</span>你是谁</a></li>
+      <li class="nav-item"><a href="#s4" class="nav-link"><span class="nav-char">04</span>你擅长什么</a></li>
+      <li class="nav-item"><a href="#s5" class="nav-link"><span class="nav-char">05</span>你想去哪</a></li>
+      <li class="nav-item"><a href="#s6" class="nav-link"><span class="nav-char">06</span>AI熟悉程度</a></li>
+      <li class="nav-item"><a href="#s7" class="nav-link"><span class="nav-char">07</span>激活完成</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <section class="section-card" id="s1">
+      <div class="section-eyebrow">Phase 01 · 起点</div>
+      <h2 class="section-title">读取安装说明</h2>
+
+      <div class="dialog-block">
+        <div class="speaker user">用户</div>
+        <div class="bubble user-bubble">读一下AI分身迁移包这个文件夹里的README.md文档</div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">工作区里没有找到"AI分身迁移包"文件夹。请问这个文件夹在哪个路径下？</div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker user">用户</div>
+        <div class="bubble user-bubble">帮我找一下电脑里的AI分身迁移包文件夹，在桌面</div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">
+          找到了，读取完毕。这是一个<strong>给AI看的安装引导手册</strong>，描述了4阶段流程：
+          <ul>
+            <li><strong>第一阶段</strong>：自动安装（复制文件到 <code>$HOME/.claude/</code>）</li>
+            <li><strong>第二阶段</strong>：引导式对话（填写个人信息）</li>
+            <li><strong>第三阶段</strong>：验证 + 激活确认 + 首个任务</li>
+            <li><strong>第四阶段</strong>：收尾，CLAUDE.md 自动接管</li>
+          </ul>
+          你是否希望我现在开始执行？
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card accent-red" id="s2">
+      <div class="section-eyebrow">Phase 02 · 安装</div>
+      <h2 class="section-title">执行文件安装</h2>
+
+      <div class="dialog-block">
+        <div class="speaker user">用户</div>
+        <div class="bubble user-bubble">开始</div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">
+          <ul>
+            <li>获取 home 目录：<code>C:\Users\liang</code></li>
+            <li>检查目录：<code>.claude/telos/</code> 不存在，<code>CLAUDE.md</code> 也不存在，无需备份</li>
+            <li>逐个复制所有文件到正确位置（bash 中文路径 for 循环有编码问题，改用逐个复制）</li>
+            <li>验证全部文件存在且有内容 ✓</li>
+          </ul>
+          全部文件已安装到正确位置。接下来花5分钟了解你——
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card" id="s3">
+      <div class="section-eyebrow">Phase 03 · 问题一</div>
+      <h2 class="section-title">你是谁</h2>
+
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">先聊聊你的基本情况——你现在是什么身份？在做什么？</div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker user">用户</div>
+        <div class="bubble user-bubble">
+          <strong>【姓名】</strong> 梁健毅，笔名苏简穆，喜欢写散文、议论文、科幻小说，INFJ一枚，影迷，折纸爱好者，有乡土情结，预计未来回去建设家乡<br><br>
+          <strong>【学校/年级】</strong> 广东海洋大学，社会学大二<br><br>
+          <strong>【坐标】</strong> 广东中山<br><br>
+          <strong>【成就事件】</strong>
+          <ul>
+            <li>大创国家级立项文旅项目学生第二成员，负责整理广东省文旅数据，辅助完成文献综述部分</li>
+            <li>新文科"族·产·文"项目国奖团队成员，辅助制作路演PPT</li>
+            <li>协办地方机关（其实是村政府啦）开展夏令营活动</li>
+            <li>作为学院组织部副部长，统筹青马工程的展开及改革，减少仪式性工作，正在筹划制作飞书数据中控资料库</li>
+            <li>作为校级社团"启创青年"的社员，正在推动社团走出学校参观附近企业</li>
+            <li>曾为实战营5队队长，因学校官僚主义忙得不可开交，没能管理好小队，希望弥补遗憾</li>
+            <li>向《科幻世界》投稿了短篇科幻小说《时差》，希望过审</li>
+            <li>作为班级学委、宣委、安委，在班级里有一定的威望</li>
+          </ul>
+        </div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">
+          （读取参考文件，写入 identity.md、skills.md、goals.md）<br><br>
+          你的AI分身已激活。我记住了：
+          <div class="info-grid" style="margin-top:0.8rem;">
+            <div class="info-cell">
+              <div class="info-cell-label">身份</div>
+              <div class="info-cell-value">梁健毅（苏简穆），广东海洋大学社会学大二，广东中山人，INFJ，写作者+折纸爱好者</div>
+            </div>
+            <div class="info-cell">
+              <div class="info-cell-label">优势</div>
+              <div class="info-cell-value">组织统筹+文字表达+信息整理，本地根基+真实基层经历</div>
+            </div>
+            <div class="info-cell">
+              <div class="info-cell-label">目标</div>
+              <div class="info-cell-value">回裕洲村做基层建设，主线走三支一扶→村委合同工</div>
+            </div>
+            <div class="info-cell">
+              <div class="info-cell-label">AI水平</div>
+              <div class="info-cell-value">初步阶段，正在系统学习</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card" id="s4">
+      <div class="section-eyebrow">Phase 03 · 问题二</div>
+      <h2 class="section-title">你擅长什么</h2>
+
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">回忆一下最近一两周，有没有哪件事你做起来特别顺手，别人可能觉得难但你觉得"这不是挺正常的吗"？反过来，有没有什么事你明知道该做，但一直拖着不想动手的？</div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker user">用户</div>
+        <div class="bubble user-bubble">
+          <strong>顺手的事：</strong>做课程作业的时候，我能用AI写出一份比较合理的作业，别人都在自己一个字一个字地敲，或者用AI糊弄一个作业。<br><br>
+          <strong>一直拖的事：</strong>一些部门工作——比如学校突发改革，给了一些不合理的要求给我们，现在还没有想好对策。还有就是青马工程的班服还没有买。
+        </div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">
+          有意思。你描述的其实是<strong>「人机协作的整合能力」</strong>——你不是在让AI代替你，而是能把AI的输出和自己的判断结合，产出有质量的东西。这在同龄人里是真实的优势。
+          <hr class="divider">
+          拖着没做的那两件事，卡点不一样：
+          <ul>
+            <li>班服是「<strong>低优先级但有截止焦虑</strong>」，一直放着</li>
+            <li>部门应对改革是「<strong>情况复杂+没有明确破局点</strong>」，在等一个"想清楚了再动"的时机，但这个时机往往不会自动来</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card" id="s5">
+      <div class="section-eyebrow">Phase 03 · 问题三</div>
+      <h2 class="section-title">你想去哪</h2>
+
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">想象一下，半年后一切都很顺利——你的生活跟现在最大的变化是什么？然后，你觉得现在阻碍你到达那个状态的，最大的一个障碍是什么？</div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker user">用户</div>
+        <div class="bubble user-bubble">
+          <strong>半年后：</strong>我能借助用AI搭建的类似"第二大脑"的系统，大幅提升我的执行效率，运行起自媒体，有了一定的资金来源。<br><br>
+          <strong>障碍：</strong>行动力，我承认我很懒，总是想着"等会再做"，做的时候也会被别的事情吸引注意力。
+        </div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">
+          明白了。核心目标是<strong>用AI系统化武装自己，跑通自媒体变现，解决执行力问题</strong>，最大的卡点是<strong>启动摩擦力太高+注意力容易被劫持</strong>。
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card" id="s6">
+      <div class="section-eyebrow">Phase 03 · 问题四</div>
+      <h2 class="section-title">你跟AI的关系</h2>
+
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">你之前用AI多吗？主要用来干什么？</div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker user">用户</div>
+        <div class="bubble user-bubble">之前用DeepSeek较多，试过用它生成个人成长系统（基于Obsidian），也试过用它来写作业（像大多数人一样），更多的是把它当成"高级百度"用，也试过其他国产大模型，只是浅尝即止。</div>
+      </div>
+      <div class="dialog-block">
+        <div class="speaker ai">助手</div>
+        <div class="bubble ai-bubble">
+          收到。你目前是<strong>进阶初学者</strong>——不是纯新手（有过系统化尝试，比如用AI搭Obsidian成长系统），但还没形成稳定的工作流，用法比较零散。我以后跟你说话会跳过基础解释，直接给方案。
+        </div>
+      </div>
+    </section>
+
+    <section class="section-card accent-mixed" id="s7">
+      <div class="section-eyebrow">Phase 04 · 完成</div>
+      <h2 class="section-title">AI分身已激活</h2>
+
+      <div class="activation-summary">
+        <p>📌 <strong>身份</strong>：梁健毅（苏简穆），广东海洋大学社会学大二，广东中山坦洲镇裕洲村人，INFJ，写作者+折纸爱好者，有强烈乡土情结</p>
+        <p>💪 <strong>优势</strong>：人机协作整合能力（能判断AI输出质量，不是无脑复制）+ 组织统筹 + 文字表达 / <strong>阻力区</strong>：启动摩擦力高，注意力容易被劫持，容易"等会再做"</p>
+        <p>🎯 <strong>目标</strong>：半年内用AI搭起第二大脑系统，跑通自媒体变现；长期回裕洲村做基层建设 / <strong>卡点</strong>：行动力，启动难</p>
+        <p>🔧 <strong>AI水平</strong>：进阶初学者。用过DeepSeek搭Obsidian成长系统，有判断力，但工作流还是零散的</p>
+      </div>
+
+      <hr class="divider">
+
+      <blockquote>
+        你现在就有一个天然的起点——你已经在打AI提效课，同时要做飞书数据中控库。这两件事合并成你自媒体的第一个内容方向——「社科生用AI做组织管理」。
+      </blockquote>
+
+      <div style="margin-top:1.2rem;">
+        <div style="margin-bottom:0.6rem; font-size:0.85rem; color:var(--faded); font-family:var(--font-mono);">标签</div>
+        <span class="tag tag-green">AI分身</span>
+        <span class="tag tag-green">进阶初学者</span>
+        <span class="tag tag-ink">社会学</span>
+        <span class="tag tag-ink">基层建设</span>
+        <span class="tag tag-red">行动力待提升</span>
+        <span class="tag tag-faded">INFJ</span>
+        <span class="tag tag-faded">苏简穆</span>
+      </div>
+
+      <hr class="divider">
+      <p style="font-size:0.88rem; color:var(--faded);">以后有新变化，跟我说「记住：……」就行，我自动存档。越用越懂你。安装全部完成。</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <span>苏简穆 · 田野笔记存档</span>
+    <span>2026-04-06 · Claude Code 会话</span>
+    <span>AI分身安装记录 v1.0</span>
+  </footer>
+
+</div>
+
+<script>
+  const sections = document.querySelectorAll('main section[id]');
+  const navLinks = document.querySelectorAll('#nav-list .nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const active = document.querySelector(`#nav-list a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
