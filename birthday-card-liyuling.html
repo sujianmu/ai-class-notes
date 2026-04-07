@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生日快乐 · 李宇柃</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a0a00;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Georgia', 'SimSong', serif;
+    overflow: hidden;
+  }
+
+  /* 星星背景 */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+
+  @keyframes twinkle {
+    from { opacity: 0.1; transform: scale(0.8); }
+    to   { opacity: 0.9; transform: scale(1.2); }
+  }
+
+  /* 漂浮气球 */
+  .balloons {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .balloon {
+    position: absolute;
+    bottom: -80px;
+    font-size: 2rem;
+    animation: floatUp var(--dur) ease-in infinite;
+    animation-delay: var(--delay);
+    opacity: 0;
+  }
+
+  @keyframes floatUp {
+    0%   { bottom: -80px; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.7; }
+    100% { bottom: 110%; opacity: 0; }
+  }
+
+  /* 主卡片 */
+  .card {
+    position: relative;
+    z-index: 10;
+    width: 420px;
+    background: linear-gradient(160deg, #fff8f0 0%, #ffecd2 40%, #ffe0b2 100%);
+    border-radius: 24px;
+    padding: 48px 40px 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,180,80,0.3);
+    text-align: center;
+  }
+
+  /* 蜡烛区域 */
+  .candle-area {
+    margin-bottom: 28px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 18px;
+  }
+
+  .candle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* 火焰 */
+  .flame {
+    width: 14px;
+    height: 22px;
+    background: radial-gradient(ellipse at 50% 80%, #fff7a1 0%, #ffd000 40%, #ff6600 80%, transparent 100%);
+    border-radius: 50% 50% 35% 35%;
+    animation: flicker 0.18s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+    filter: drop-shadow(0 0 6px #ffd000);
+    margin-bottom: 1px;
+  }
+
+  @keyframes flicker {
+    0%   { transform: scaleX(1) scaleY(1) rotate(-3deg); }
+    25%  { transform: scaleX(0.88) scaleY(1.06) rotate(2deg); }
+    50%  { transform: scaleX(1.04) scaleY(0.94) rotate(-1deg); }
+    75%  { transform: scaleX(0.92) scaleY(1.08) rotate(3deg); }
+    100% { transform: scaleX(1.02) scaleY(0.97) rotate(-2deg); }
+  }
+
+  .candle-body {
+    width: 14px;
+    height: 52px;
+    border-radius: 4px 4px 3px 3px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .candle-body::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.25) 10%, transparent 50%);
+  }
+
+  .c1 .candle-body { background: linear-gradient(180deg, #ffb347, #e07b00); }
+  .c2 .candle-body { background: linear-gradient(180deg, #ff8a80, #c62828); }
+  .c3 .candle-body { background: linear-gradient(180deg, #ce93d8, #7b1fa2); }
+
+  .candle-base {
+    width: 20px;
+    height: 6px;
+    background: linear-gradient(180deg, #f5deb3, #d2a45a);
+    border-radius: 2px;
+    margin-top: 1px;
+  }
+
+  /* 蛋糕 */
+  .cake {
+    width: 110px;
+    height: 80px;
+    background: linear-gradient(180deg, #ffe082 0%, #ffca28 40%, #fb8c00 100%);
+    border-radius: 10px 10px 16px 16px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(200,100,0,0.3);
+  }
+
+  .cake::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 20px;
+    background: #fff8e1;
+    border-radius: 8px 8px 0 0;
+  }
+
+  .cake-stripe {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 14px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 2px;
+  }
+  .cake-stripe:nth-child(1) { left: 20px; }
+  .cake-stripe:nth-child(2) { left: 50px; }
+  .cake-stripe:nth-child(3) { left: 80px; }
+
+  /* 标题 */
+  .title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #c05000;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+    color: #a06030;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  /* 分隔线 */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e0a060, transparent);
+    margin: 0 0 24px;
+  }
+
+  /* 正文 */
+  .body-text {
+    font-size: 0.97rem;
+    color: #5a3010;
+    line-height: 1.85;
+    text-align: left;
+    margin-bottom: 24px;
+  }
+
+  .body-text .hi {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #c05000;
+  }
+
+  .body-text .tag {
+    display: inline-block;
+    background: rgba(255,160,50,0.18);
+    color: #a04000;
+    border-radius: 4px;
+    padding: 0 5px;
+    font-size: 0.88em;
+  }
+
+  /* 签名 */
+  .sign {
+    margin-top: 20px;
+    font-size: 0.85rem;
+    color: #8a5020;
+    text-align: right;
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* 花瓣飘落 */
+  .petals {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .petal {
+    position: absolute;
+    top: -20px;
+    font-size: 1.1rem;
+    animation: petalFall var(--pd) linear infinite;
+    animation-delay: var(--pdelay);
+    opacity: 0;
+  }
+
+  @keyframes petalFall {
+    0%   { top: -20px; opacity: 0; transform: rotate(0deg) translateX(0); }
+    10%  { opacity: 0.8; }
+    90%  { opacity: 0.6; }
+    100% { top: 105%; opacity: 0; transform: rotate(360deg) translateX(30px); }
+  }
+
+  /* 底部装饰 */
+  .card-footer {
+    margin-top: 16px;
+    font-size: 0.72rem;
+    color: #c09060;
+    letter-spacing: 0.08em;
+  }
+</style>
+</head>
+<body>
+
+<!-- 星星 -->
+<div class="stars" id="stars"></div>
+
+<!-- 气球 -->
+<div class="balloons" id="balloons"></div>
+
+<!-- 花瓣 -->
+<div class="petals" id="petals"></div>
+
+<!-- 主卡片 -->
+<div class="card">
+
+  <!-- 蜡烛 + 蛋糕 -->
+  <div class="candle-area">
+    <div class="candle-wrap c1">
+      <div class="flame"></div>
+      <div class="candle-body"></div>
+      <div class="candle-base"></div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:2px;">
+        <div class="candle-wrap c2">
+          <div class="flame"></div>
+          <div class="candle-body"></div>
+          <div class="candle-base"></div>
+        </div>
+        <div class="candle-wrap c3">
+          <div class="flame"></div>
+          <div class="candle-body"></div>
+          <div class="candle-base"></div>
+        </div>
+      </div>
+      <div class="cake">
+        <div class="cake-stripe"></div>
+        <div class="cake-stripe"></div>
+        <div class="cake-stripe"></div>
+      </div>
+    </div>
+
+    <div class="candle-wrap c1">
+      <div class="flame"></div>
+      <div class="candle-body"></div>
+      <div class="candle-base"></div>
+    </div>
+  </div>
+
+  <div class="title">生日快乐 · 李宇柃</div>
+  <div class="subtitle">Happy Birthday</div>
+
+  <div class="divider"></div>
+
+  <div class="body-text">
+    <span class="hi">泥嚎学妹——</span><br><br>
+    听说今天是你的生日，学长来正式祝贺一下。<br><br>
+    你是那种会在陌生群里鼓起勇气说
+    <span class="tag">「以后不懂的问题我就请教你了」</span>
+    的人，这份勇气，比培养计划里任何一条必修学分都值钱。<br><br>
+    有些门关着，不是终点，是路在别处。<br>
+    往后的路，你会走得越来越清楚的。<br><br>
+    今天先把学委的事放一放——<br>
+    <strong>生日快乐，宇柃。</strong>&nbsp;🎂
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sign">
+    —— 你的学长<br>
+    <span class="date-text" style="font-size:0.78rem;color:#b07840;"></span>
+  </div>
+
+  <div class="card-footer">🎈 愿今年的每一扇门，都为你打开 🎈</div>
+</div>
+
+<script>
+  // 注入今日日期
+  document.querySelector('.date-text').textContent = new Date().toLocaleDateString('zh-CN', { year:'numeric', month:'long', day:'numeric' });
+
+  // 生成星星
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const size = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*100}%;
+      width:${size}px; height:${size}px;
+      --d:${(Math.random()*2+1).toFixed(2)}s;
+      animation-delay:${(Math.random()*3).toFixed(2)}s;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // 生成气球
+  const balloonEl = document.getElementById('balloons');
+  const balloonEmoji = ['🎈','🎁','🎀','✨','🌟'];
+  for (let i = 0; i < 10; i++) {
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    b.textContent = balloonEmoji[i % balloonEmoji.length];
+    b.style.cssText = `
+      left:${Math.random()*100}%;
+      --dur:${(Math.random()*5+6).toFixed(1)}s;
+      --delay:${(Math.random()*8).toFixed(1)}s;
+      font-size:${Math.random()*1.2+1.5}rem;
+    `;
+    balloonEl.appendChild(b);
+  }
+
+  // 生成花瓣
+  const petalEl = document.getElementById('petals');
+  const petalEmoji = ['🌸','✿','❀','🌼'];
+  for (let i = 0; i < 14; i++) {
+    const p = document.createElement('div');
+    p.className = 'petal';
+    p.textContent = petalEmoji[i % petalEmoji.length];
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      --pd:${(Math.random()*5+6).toFixed(1)}s;
+      --pdelay:${(Math.random()*10).toFixed(1)}s;
+    `;
+    petalEl.appendChild(p);
+  }
+
+  // 蜡烛闪烁随机化
+  document.querySelectorAll('.flame').forEach(f => {
+    f.style.animationDuration = (Math.random()*0.12+0.13).toFixed(3)+'s';
+  });
+</script>
+</body>
+</html>
