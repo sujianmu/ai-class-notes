@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生日快乐 · 张伟</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a0800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'Noto Serif SC', 'SimSun', Georgia, serif;
+    overflow: hidden;
+  }
+
+  .stars { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.1; transform: scale(0.8); }
+    to   { opacity: 0.85; transform: scale(1.2); }
+  }
+
+  .balloons { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+  .balloon {
+    position: absolute;
+    bottom: -60px;
+    animation: floatUp var(--dur) ease-in infinite;
+    animation-delay: var(--delay);
+    opacity: 0;
+  }
+  @keyframes floatUp {
+    0%   { bottom: -60px; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 0.7; }
+    100% { bottom: 110%; opacity: 0; }
+  }
+
+  .card {
+    position: relative;
+    z-index: 10;
+    width: 420px;
+    background: linear-gradient(160deg, #fff8f0 0%, #ffecd2 45%, #ffe0b2 100%);
+    border-radius: 24px;
+    padding: 48px 40px 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,180,80,0.25);
+    text-align: center;
+  }
+
+  /* 蜡烛区域 */
+  .candle-area {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+  .candle-wrap { display: flex; flex-direction: column; align-items: center; }
+
+  .flame {
+    width: 13px; height: 20px;
+    background: radial-gradient(ellipse at 50% 80%, #fff7a1 0%, #ffd000 40%, #ff6600 80%, transparent 100%);
+    border-radius: 50% 50% 35% 35%;
+    animation: flicker 0.18s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+    filter: drop-shadow(0 0 5px #ffd000);
+    margin-bottom: 1px;
+  }
+  @keyframes flicker {
+    0%   { transform: scaleX(1)    scaleY(1)    rotate(-3deg); }
+    33%  { transform: scaleX(0.88) scaleY(1.06) rotate(2deg);  }
+    66%  { transform: scaleX(1.04) scaleY(0.93) rotate(-1deg); }
+    100% { transform: scaleX(0.93) scaleY(1.07) rotate(3deg);  }
+  }
+
+  .candle-body {
+    width: 13px; height: 50px;
+    border-radius: 4px 4px 3px 3px;
+    position: relative; overflow: hidden;
+  }
+  .candle-body::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(255,255,255,0.22) 10%, transparent 55%);
+  }
+  .c1 .candle-body { background: linear-gradient(180deg, #ffb347, #e07b00); }
+  .c2 .candle-body { background: linear-gradient(180deg, #80d4ff, #1565c0); }
+  .c3 .candle-body { background: linear-gradient(180deg, #a5d6a7, #2e7d32); }
+
+  .candle-base {
+    width: 19px; height: 5px;
+    background: linear-gradient(180deg, #f5deb3, #d2a45a);
+    border-radius: 2px; margin-top: 1px;
+  }
+
+  .cake {
+    width: 100px; height: 72px;
+    background: linear-gradient(180deg, #ffe082 0%, #ffca28 40%, #fb8c00 100%);
+    border-radius: 10px 10px 14px 14px;
+    position: relative; overflow: hidden;
+    box-shadow: 0 4px 10px rgba(200,100,0,0.3);
+  }
+  .cake::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 18px;
+    background: #fff8e1; border-radius: 8px 8px 0 0;
+  }
+
+  .title {
+    font-size: 1.55rem; font-weight: 700;
+    color: #c05000; letter-spacing: 0.04em; margin-bottom: 6px;
+  }
+  .subtitle {
+    font-size: 0.78rem; color: #a06030;
+    letter-spacing: 0.12em; margin-bottom: 24px;
+  }
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e0a060, transparent);
+    margin: 0 0 22px;
+  }
+
+  .body-text {
+    font-size: 0.95rem; color: #5a3010;
+    line-height: 1.9; text-align: left; margin-bottom: 20px;
+  }
+  .hi { font-size: 1.05rem; font-weight: 700; color: #c05000; }
+  .tag {
+    display: inline-block;
+    background: rgba(255,160,50,0.15);
+    color: #a04000; border-radius: 4px;
+    padding: 0 5px; font-size: 0.87em;
+  }
+  .em { font-weight: 700; color: #7a3a00; }
+
+  .sign {
+    margin-top: 16px; font-size: 0.85rem;
+    color: #8a5020; text-align: right;
+    font-style: italic; line-height: 1.6;
+  }
+  .card-footer {
+    margin-top: 18px; font-size: 0.72rem;
+    color: #c09060; letter-spacing: 0.06em;
+  }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="balloons" id="balloons"></div>
+
+<div class="card">
+  <div class="candle-area">
+    <div class="candle-wrap c1">
+      <div class="flame"></div><div class="candle-body"></div><div class="candle-base"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;">
+      <div style="display:flex;align-items:flex-end;gap:10px;margin-bottom:2px;">
+        <div class="candle-wrap c2">
+          <div class="flame"></div><div class="candle-body"></div><div class="candle-base"></div>
+        </div>
+        <div class="candle-wrap c3">
+          <div class="flame"></div><div class="candle-body"></div><div class="candle-base"></div>
+        </div>
+      </div>
+      <div class="cake"></div>
+    </div>
+    <div class="candle-wrap c1">
+      <div class="flame"></div><div class="candle-body"></div><div class="candle-base"></div>
+    </div>
+  </div>
+
+  <div class="title">生日快乐 · 张伟</div>
+  <div class="subtitle">愿这一年，终于好好睡一觉</div>
+
+  <div class="divider"></div>
+
+  <div class="body-text">
+    <span class="hi">哥们，生日快乐。</span><br><br>
+    你说今天又没睡，我知道。<br>
+    饭我<span class="tag">帮你打了，放你桌上了</span>——这件事我还会继续做。<br><br>
+    这段日子你一直在扛，<span class="em">那些熬过去的夜晚，都算数的。</span><br><br>
+    路还长，但你不是一个人走的。<br>
+    今天，先好好过生日。
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sign">
+    —— 你的室友<br>
+    <span class="date-out" style="font-size:0.78rem;color:#b07840;"></span>
+  </div>
+
+  <div class="card-footer">🎈 撑过去就是你的了 🎈</div>
+</div>
+
+<script>
+  document.querySelector('.date-out').textContent =
+    new Date().toLocaleDateString('zh-CN', {year:'numeric',month:'long',day:'numeric'});
+
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2.4 + 0.5;
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--d:${(Math.random()*2+1).toFixed(2)}s;animation-delay:${(Math.random()*3).toFixed(2)}s;`;
+    starsEl.appendChild(s);
+  }
+
+  const balloonEl = document.getElementById('balloons');
+  ['🎈','🎁','🌟','✨','🎀'].forEach((e, i) => {
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    b.textContent = e;
+    b.style.cssText = `left:${10+i*18}%;font-size:${Math.random()*0.8+1.4}rem;--dur:${(Math.random()*4+7).toFixed(1)}s;--delay:${(i*1.5).toFixed(1)}s;`;
+    balloonEl.appendChild(b);
+  });
+  for (let i = 0; i < 2; i++) {
+    const b = document.createElement('div');
+    b.className = 'balloon';
+    b.textContent = '🎈';
+    b.style.cssText = `left:${Math.random()*80+10}%;font-size:1.6rem;--dur:${(Math.random()*3+8).toFixed(1)}s;--delay:${(Math.random()*5+5).toFixed(1)}s;`;
+    balloonEl.appendChild(b);
+  }
+
+  document.querySelectorAll('.flame').forEach(f => {
+    f.style.animationDuration = (Math.random()*0.1+0.14).toFixed(3)+'s';
+  });
+</script>
+</body>
+</html>
