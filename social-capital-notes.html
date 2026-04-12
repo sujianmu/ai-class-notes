@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社会资本与教育获得 · 学习笔记</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:       #1a2e22;
+    --sage:      #3d6b52;
+    --cinnabar:  #c0392b;
+    --cream:     #f5f0e8;
+    --parchment: #ede7d9;
+    --faded:     #b8a99a;
+    --line:      #d6cdc0;
+    --body-text: #2c3e30;
+    --font-display: 'Noto Serif SC', 'Georgia', serif;
+    --font-body:    'Book Antiqua', 'Palatino Linotype', 'Palatino', 'Noto Serif SC', serif;
+    --font-mono:    'Courier New', 'Courier', monospace;
+    --dur: 0.55s;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 18px; }
+
+  body {
+    background: #c8bda4;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.07'/%3E%3C/svg%3E");
+    font-family: var(--font-body);
+    color: var(--body-text);
+    line-height: 1.8;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .book-shell {
+    width: min(1100px, 97vw);
+    height: min(760px, 95vh);
+    display: flex;
+    border-radius: 3px 10px 10px 3px;
+    box-shadow: -6px 0 18px rgba(0,0,0,.3), 0 10px 48px rgba(0,0,0,.4), 4px 0 10px rgba(0,0,0,.15);
+    position: relative;
+  }
+
+  .book-spine {
+    width: 26px;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, #2a4a36 0%, #1a2e22 45%, #243d2c 100%);
+    border-radius: 3px 0 0 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: inset -4px 0 10px rgba(0,0,0,.35);
+    z-index: 200;
+  }
+  .book-spine::before {
+    content: '';
+    position: absolute;
+    inset: 10px 5px;
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: 2px;
+  }
+  .spine-text {
+    writing-mode: vertical-rl;
+    font-family: var(--font-display);
+    font-size: 0.55rem;
+    letter-spacing: 0.35em;
+    color: rgba(255,255,255,.4);
+    user-select: none;
+  }
+
+  .book-pages {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0 10px 10px 0;
+    perspective: 1800px;
+    perspective-origin: 0% 50%;
+  }
+
+  .book-pages::after {
+    content: '';
+    position: absolute;
+    top: 2px; bottom: 2px; right: 0;
+    width: 10px;
+    background: linear-gradient(to left, rgba(0,0,0,.1), transparent);
+    pointer-events: none;
+    z-index: 150;
+    border-radius: 0 10px 10px 0;
+  }
+
+  .page {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+    background-image:
+      repeating-linear-gradient(to bottom, transparent 27px, rgba(214,205,192,.5) 27px, rgba(214,205,192,.5) 28px),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.028'/%3E%3C/svg%3E");
+    border-radius: 0 10px 10px 0;
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    transform: rotateY(-90deg);
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 38px;
+    width: 1.5px;
+    background: var(--cinnabar);
+    opacity: 0.28;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .page::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0,0,0,.18) 0%, transparent 18%);
+    border-radius: 0 10px 10px 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9;
+    transition: opacity var(--dur) ease;
+  }
+
+  .page.is-current {
+    transform: rotateY(0deg);
+    z-index: 20;
+    pointer-events: all;
+    transition: transform var(--dur) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .page.is-current::after { opacity: 0.3; }
+
+  .page.is-past {
+    transform: rotateY(90deg);
+    z-index: 5;
+    pointer-events: none;
+    transition: transform var(--dur) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .page.flipping-out {
+    transform: rotateY(90deg);
+    z-index: 25;
+    pointer-events: none;
+    transition: transform var(--dur) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .page.flipping-out::after { opacity: 0 !important; }
+
+  .page.flipping-in {
+    transform: rotateY(0deg);
+    z-index: 24;
+    pointer-events: none;
+    transition: transform var(--dur) cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .page-header {
+    padding: 0.9rem 1.8rem 0.7rem 3.2rem;
+    border-bottom: 1px solid var(--line);
+    background: var(--parchment);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 5;
+  }
+  .page-section-num {
+    font-family: var(--font-mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 0.2rem;
+  }
+  .page-section-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .btn-toc {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.28rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    color: var(--faded);
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-toc:hover { border-color: var(--sage); color: var(--sage); background: rgba(61,107,82,.06); }
+
+  .page-inner {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.4rem 2rem 1rem 3.2rem;
+    position: relative;
+    z-index: 2;
+    scroll-behavior: smooth;
+  }
+  .page-inner::-webkit-scrollbar { width: 4px; }
+  .page-inner::-webkit-scrollbar-track { background: transparent; }
+  .page-inner::-webkit-scrollbar-thumb { background: var(--line); border-radius: 2px; }
+
+  .page-footer {
+    padding: 0.6rem 1.8rem 0.6rem 3.2rem;
+    border-top: 1px solid var(--line);
+    background: var(--parchment);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 5;
+  }
+  .btn-turn {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.32rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    color: var(--faded);
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 80px;
+    justify-content: center;
+  }
+  .btn-turn:hover:not(:disabled) { border-color: var(--sage); color: var(--sage); background: rgba(61,107,82,.06); }
+  .btn-turn:disabled { opacity: 0.28; cursor: not-allowed; }
+  .page-num-display {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--faded);
+    letter-spacing: 0.1em;
+  }
+  .page-num-display .cur { color: var(--cinnabar); font-weight: 600; }
+
+  /* 封面 */
+  .page-cover .page-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 3.8rem;
+  }
+  .cover-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 1.1rem;
+  }
+  .cover-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 3.2vw, 2.5rem);
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.22;
+  }
+  .cover-title em {
+    font-style: italic;
+    color: var(--sage);
+    display: block;
+    font-size: 0.65em;
+    margin-top: 0.35em;
+  }
+  .cover-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 1.3rem;
+  }
+  .cover-meta span {
+    font-family: var(--font-mono);
+    font-size: 0.67rem;
+    color: var(--faded);
+    letter-spacing: 0.08em;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--cinnabar); opacity: 0.7; flex-shrink: 0; }
+  .cover-stamp {
+    margin-top: 2.2rem;
+    width: 74px; height: 74px;
+    border: 2px solid var(--cinnabar);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--cinnabar);
+    text-align: center;
+    line-height: 1.35;
+    opacity: 0.65;
+    position: relative;
+    transform: rotate(-7deg);
+  }
+  .cover-stamp::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid var(--cinnabar);
+    border-radius: 50%;
+    opacity: 0.5;
+  }
+
+  /* 目录 */
+  .toc-list { list-style: none; }
+  .toc-item { position: relative; }
+  .toc-link {
+    display: flex;
+    align-items: baseline;
+    padding: 0.4rem 0.5rem 0.4rem 0;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--body-text);
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+  }
+  .toc-link:hover { background: rgba(61,107,82,.07); color: var(--sage); }
+  .toc-num { font-family: var(--font-mono); font-size: 0.65rem; color: var(--cinnabar); opacity: 0.8; min-width: 2em; margin-right: 0.4em; }
+  .toc-label { flex: 1; }
+  .toc-dots { flex: 1; border-bottom: 1px dotted var(--line); margin: 0 0.5em 0.2em; min-width: 20px; }
+  .toc-pg { font-family: var(--font-mono); font-size: 0.65rem; color: var(--faded); min-width: 2em; text-align: right; }
+  .toc-divider { height: 1px; background: var(--line); opacity: 0.5; margin: 0.4rem 0; }
+  .toc-item.sub .toc-link { padding-left: 1.2rem; font-size: 0.84rem; color: var(--faded); }
+  .toc-item.sub .toc-link:hover { color: var(--sage); }
+  .toc-item.sub .toc-num { color: var(--faded); opacity: 0.7; }
+
+  /* 内容组件 */
+  .section-card h2 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed var(--line);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .section-card h3 { font-family: var(--font-display); font-size: 0.9rem; font-style: italic; color: var(--sage); margin: 1.1rem 0 0.45rem; }
+  .section-card p { font-size: 0.86rem; color: var(--body-text); margin-bottom: 0.65rem; }
+  .section-card p:last-child { margin-bottom: 0; }
+
+  .concept-list { list-style: none; margin-top: 0.45rem; }
+  .concept-item { display: flex; gap: 0.75rem; align-items: flex-start; padding: 0.65rem 0; border-bottom: 1px dotted var(--line); }
+  .concept-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .concept-icon { flex-shrink: 0; width: 24px; height: 24px; border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 0.82rem; margin-top: 0.1rem; }
+  .icon-sage { background: rgba(61,107,82,.12); }
+  .icon-red  { background: rgba(192,57,43,.10); }
+  .icon-gold { background: rgba(180,130,50,.12); }
+  .concept-body strong { display: block; font-family: var(--font-display); font-size: 0.86rem; color: var(--ink); font-weight: 600; margin-bottom: 0.18rem; }
+  .concept-body p { margin-bottom: 0; font-size: 0.82rem; }
+
+  blockquote {
+    border-left: 3px solid var(--cinnabar);
+    background: rgba(192,57,43,.04);
+    margin: 0.85rem 0; padding: 0.65rem 1rem;
+    border-radius: 0 5px 5px 0; font-style: italic;
+    color: var(--sage); font-size: 0.83rem;
+  }
+  blockquote cite { display: block; margin-top: 0.3rem; font-size: 0.7rem; font-style: normal; font-family: var(--font-mono); color: var(--faded); letter-spacing: 0.05em; }
+
+  .finding-grid { display: grid; gap: 0.55rem; margin-top: 0.45rem; }
+  .finding-item {
+    background: rgba(255,255,255,.55); border: 1px solid var(--line);
+    border-radius: 5px; padding: 0.65rem 0.9rem;
+    display: flex; gap: 0.75rem; align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .finding-item:hover { border-color: var(--sage); }
+  .finding-n { flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%; background: var(--sage); color: #fff; font-family: var(--font-mono); font-size: 0.58rem; display: flex; align-items: center; justify-content: center; margin-top: 0.1rem; }
+  .finding-n.red  { background: var(--cinnabar); }
+  .finding-n.gold { background: #a87b30; }
+  .finding-item p { margin: 0; font-size: 0.82rem; }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-top: 0.65rem; }
+  .compare-cell { background: rgba(255,255,255,.55); border: 1px solid var(--line); border-radius: 5px; padding: 0.75rem 0.9rem; }
+  .compare-cell.sage-cell { border-top: 2px solid var(--sage); }
+  .compare-cell.red-cell  { border-top: 2px solid var(--cinnabar); }
+  .compare-label { font-family: var(--font-mono); font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.35rem; }
+  .compare-label.sage { color: var(--sage); }
+  .compare-label.red  { color: var(--cinnabar); }
+  .compare-cell p { margin: 0; font-size: 0.8rem; }
+
+  .tag-group { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.55rem; }
+  .tag { padding: 0.15rem 0.55rem; border-radius: 20px; font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.05em; border: 1px solid; transition: background 0.2s, color 0.2s; }
+  .tag-green { color: var(--sage); border-color: var(--sage); background: rgba(61,107,82,.07); }
+  .tag-red   { color: var(--cinnabar); border-color: var(--cinnabar); background: rgba(192,57,43,.06); }
+  .tag-ink   { color: var(--faded); border-color: var(--line); background: transparent; }
+
+  /* 表格 */
+  .note-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 0.6rem; }
+  .note-table th { background: rgba(61,107,82,.1); color: var(--sage); font-family: var(--font-display); font-weight: 600; padding: 0.45rem 0.7rem; text-align: left; border-bottom: 2px solid var(--sage); font-size: 0.78rem; }
+  .note-table td { padding: 0.4rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .note-table tr:last-child td { border-bottom: none; }
+  .note-table tr:hover td { background: rgba(61,107,82,.04); }
+  .verdict-yes { color: var(--sage); font-weight: 600; }
+  .verdict-no  { color: var(--cinnabar); font-weight: 600; }
+  .verdict-part { color: #a87b30; font-weight: 600; }
+
+  /* 问答记录 */
+  .qa-block { margin-bottom: 1.2rem; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .qa-q { background: rgba(61,107,82,.08); padding: 0.6rem 0.9rem; font-family: var(--font-display); font-size: 0.84rem; color: var(--ink); font-weight: 600; border-bottom: 1px solid var(--line); }
+  .qa-q::before { content: 'Q　'; color: var(--sage); }
+  .qa-a { padding: 0.55rem 0.9rem; font-size: 0.8rem; background: rgba(255,255,255,.4); }
+  .qa-a::before { content: '答　'; color: var(--faded); font-family: var(--font-mono); font-size: 0.72rem; }
+  .qa-feedback { padding: 0.5rem 0.9rem; font-size: 0.78rem; font-style: italic; color: var(--sage); background: rgba(192,57,43,.03); border-top: 1px dotted var(--line); }
+  .qa-feedback::before { content: '评　'; color: var(--cinnabar); font-style: normal; font-family: var(--font-mono); font-size: 0.72rem; }
+
+  .closing-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; text-align: center; padding: 1.5rem 2rem; }
+  .closing-ornament { font-size: 1.6rem; opacity: 0.35; letter-spacing: 0.5em; margin-bottom: 1.4rem; }
+  .closing-wrap .big { font-family: var(--font-display); font-size: 1.3rem; color: var(--ink); font-weight: 500; margin-bottom: 0.7rem; }
+  .closing-wrap p { font-size: 0.88rem; color: var(--body-text); }
+  .closing-meta { margin-top: 2rem; padding-top: 1.2rem; border-top: 1px dotted var(--line); width: 100%; }
+  .closing-meta p { font-family: var(--font-mono); font-size: 0.65rem; color: var(--faded); letter-spacing: 0.06em; margin-bottom: 0.25rem; }
+
+  @media (max-width: 600px) {
+    .book-spine { display: none; }
+    .book-shell { border-radius: 0; width: 100vw; height: 100vh; }
+    .book-pages { border-radius: 0; }
+    .compare-grid { grid-template-columns: 1fr; }
+    .page-inner { padding-left: 2.4rem; }
+    .page-header, .page-footer { padding-left: 2.4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="book-shell">
+  <div class="book-spine">
+    <span class="spine-text">社会资本 · 学习笔记</span>
+  </div>
+
+  <div class="book-pages" id="bookPages">
+
+    <!-- 页 0：封面 -->
+    <div class="page page-cover is-current" data-idx="0">
+      <div class="page-inner">
+        <p class="cover-eyebrow">学习笔记 · 教育社会学 · 2026.04.12</p>
+        <h1 class="cover-title">
+          社会资本与教育获得
+          <em>——网络资源与社会闭合的视角</em>
+        </h1>
+        <div class="cover-meta">
+          <span><span class="dot"></span>赵延东 &amp; 洪岩璧 / 《社会学研究》2012年第5期</span>
+          <span><span class="dot"></span>共 8 页</span>
+          <span><span class="dot"></span>含检验问答记录</span>
+        </div>
+        <div class="cover-stamp">学习<br>笔记</div>
+      </div>
+      <div class="page-footer">
+        <button class="btn-turn" disabled>← 上一页</button>
+        <div class="page-num-display">第 <span class="cur">1</span> / 8 页</div>
+        <button class="btn-turn" data-dir="1">下一页 →</button>
+      </div>
+    </div>
+
+    <!-- 页 1：目录 -->
+    <div class="page" data-idx="1">
+      <div class="page-header">
+        <div>
+          <div class="page-section-num">Contents</div>
+          <div class="page-section-title">目　录</div>
+        </div>
+      </div>
+      <div class="page-inner">
+        <ul class="toc-list">
+          <li class="toc-item">
+            <button class="toc-link" data-page="0"><span class="toc-num">〇</span><span class="toc-label">封面</span><span class="toc-dots"></span><span class="toc-pg">1</span></button>
+          </li>
+          <li class="toc-divider"></li>
+          <li class="toc-item">
+            <button class="toc-link" data-page="2"><span class="toc-num">一</span><span class="toc-label">核心问题与两个概念</span><span class="toc-dots"></span><span class="toc-pg">3</span></button>
+          </li>
+          <li class="toc-item">
+            <button class="toc-link" data-page="3"><span class="toc-num">二</span><span class="toc-label">研究假设与验证结果</span><span class="toc-dots"></span><span class="toc-pg">4</span></button>
+          </li>
+          <li class="toc-item">
+            <button class="toc-link" data-page="4"><span class="toc-num">三</span><span class="toc-label">数据与方法</span><span class="toc-dots"></span><span class="toc-pg">5</span></button>
+          </li>
+          <li class="toc-item">
+            <button class="toc-link" data-page="5"><span class="toc-num">四</span><span class="toc-label">三个核心发现</span><span class="toc-dots"></span><span class="toc-pg">6</span></button>
+          </li>
+          <li class="toc-item">
+            <button class="toc-link" data-page="6"><span class="toc-num">五</span><span class="toc-label">交互作用深挖 · 年龄差异</span><span class="toc-dots"></span><span class="toc-pg">7</span></button>
+          </li>
+          <li class="toc-divider"></li>
+          <li class="toc-item">
+            <button class="toc-link" data-page="7"><span class="toc-num">末</span><span class="toc-label">检验问答记录</span><span class="toc-dots"></span><span class="toc-pg">8</span></button>
+          </li>
+        </ul>
+      </div>
+      <div class="page-footer">
+        <button class="btn-turn" data-dir="-1">← 上一页</button>
+        <div class="page-num-display">第 <span class="cur">2</span> / 8 页</div>
+        <button class="btn-turn" data-dir="1">下一页 →</button>
+      </div>
+    </div>
+
+    <!-- 页 3：研究假设与验证结果 -->
+    <div class="page" data-idx="3">
+      <div class="page-header">
+        <div>
+          <div class="page-section-num">Section 02</div>
+          <div class="page-section-title">研究假设与验证结果</div>
+        </div>
+        <button class="btn-toc" data-page="1">☰ 目录</button>
+      </div>
+      <div class="page-inner">
+        <div class="section-card">
+          <table class="note-table">
+            <thead>
+              <tr><th>假设</th><th>内容</th><th>结果</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>假设1</td>
+                <td>家长关系越广，孩子越容易进好学校</td>
+                <td><span class="verdict-yes">✅ 验证</span></td>
+              </tr>
+              <tr>
+                <td>假设2a</td>
+                <td>父母常和孩子聊学校的事 → 成绩更好</td>
+                <td><span class="verdict-yes">✅ 验证</span></td>
+              </tr>
+              <tr>
+                <td>假设2b</td>
+                <td>父母常指导功课 → 成绩更好</td>
+                <td><span class="verdict-no">❌ 推翻（反而负效应）</span></td>
+              </tr>
+              <tr>
+                <td>假设2c</td>
+                <td>家长常联系老师 → 成绩更好</td>
+                <td><span class="verdict-part">⚠️ 部分（中学生有效）</span></td>
+              </tr>
+              <tr>
+                <td>假设2d</td>
+                <td>家长认识其他家长多 → 成绩更好</td>
+                <td><span class="verdict-part">⚠️ 部分（小学生有效）</span></td>
+              </tr>
+              <tr>
+                <td>假设3a/3b</td>
+                <td>网络资本 → 帮助家长联系老师/其他家长 → 间接提升成绩</td>
+                <td><span class="verdict-part">⚠️ 部分验证</span></td>
+              </tr>
+              <tr>
+                <td>假设4a</td>
+                <td>网络资本对中学生进好学校的影响 &gt; 小学生</td>
+                <td><span class="verdict-yes">✅ 验证</span></td>
+              </tr>
+              <tr>
+                <td>假设4b</td>
+                <td>社会闭合对小学生成绩的影响 &gt; 中学生</td>
+                <td><span class="verdict-part">⚠️ 部分验证</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>关键：假设2b为什么被推翻？</h3>
+          <p>父母指导功课、检查作业 → 成绩反而更差。有人用"负向选择"解释：成绩差的孩子才被管。</p>
+          <p>论文引入工具变量"孩子是否有不良行为"来检验——控制之后负效应依然存在，说明<strong>管本身就有反效果</strong>，不是因为孩子差所以被管。</p>
+        </div>
+      </div>
+      <div class="page-footer">
+        <button class="btn-turn" data-dir="-1">← 上一页</button>
+        <div class="page-num-display">第 <span class="cur">4</span> / 8 页</div>
+        <button class="btn-turn" data-dir="1">下一页 →</button>
+      </div>
+    </div>
+
+    <!-- 页 4：数据与方法 -->
+    <div class="page" data-idx="4">
+      <div class="page-header">
+        <div>
+          <div class="page-section-num">Section 03</div>
+          <div class="page-section-title">数据与方法</div>
+        </div>
+        <button class="btn-toc" data-page="1">☰ 目录</button>
+      </div>
+      <div class="page-inner">
+        <div class="section-card">
+          <h2>数据来源</h2>
+          <ul class="concept-list">
+            <li class="concept-item">
+              <div class="concept-icon icon-sage">📋</div>
+              <div class="concept-body">
+                <strong>2009年全国青少年科技素养调查</strong>
+                <p>城市小学四年级 + 初中二年级在校学生，多阶段整群随机抽样，有效问卷约6000份，覆盖20个省市</p>
+              </div>
+            </li>
+          </ul>
+
+          <h2>因变量</h2>
+          <div class="compare-grid">
+            <div class="compare-cell sage-cell">
+              <div class="compare-label sage">教育机会获得</div>
+              <p>孩子就读的学校等级（1-5级，由校长自评）</p>
+            </div>
+            <div class="compare-cell red-cell">
+              <div class="compare-label red">学业成绩</div>
+              <p>孩子在班级中的相对排名，经因子分析转换为1-100分</p>
+            </div>
+          </div>
+
+          <h2>模型选择</h2>
+          <div class="finding-grid">
+            <div class="finding-item">
+              <div class="finding-n">1</div>
+              <p><strong>定序回归（Ordinal Regression）</strong>——用于分析学校等级（定序变量）</p>
+            </div>
+            <div class="finding-item">
+              <div class="finding-n">2</div>
+              <p><strong>OLS嵌套回归</strong>——用于分析学业成绩（定距变量），分小学生和中学生两套模型</p>
+            </div>
+            <div class="finding-item">
+              <div class="finding-n gold">3</div>
+              <p><strong>工具变量</strong>——"孩子是否有不良行为"，用于检验父母干预的负效应是否来自负向选择</p>
+            </div>
+          </div>
+
+          <h3>控制变量</h3>
+          <div class="tag-group">
+            <span class="tag tag-ink">父亲教育年数</span>
+            <span class="tag tag-ink">家庭藏书数量</span>
+            <span class="tag tag-ink">家庭财产</span>
+            <span class="tag tag-ink">家庭人均月收入</span>
+            <span class="tag tag-ink">父亲是否党员</span>
+            <span class="tag tag-ink">父亲户口类型</span>
+            <span class="tag tag-ink">父亲民族</span>
+            <span class="tag tag-ink">父母教育期望</span>
+          </div>
+        </div>
+      </div>
+      <div class="page-footer">
+        <button class="btn-turn" data-dir="-1">← 上一页</button>
+        <div class="page-num-display">第 <span class="cur">5</span> / 8 页</div>
+        <button class="btn-turn" data-dir="1">下一页 →</button>
+      </div>
+    </div>
+
+    <!-- 页 5：三个核心发现 -->
+    <div class="page" data-idx="5">
+      <div class="page-header">
+        <div>
+          <div class="page-section-num">Section 04</div>
+          <div class="page-section-title">三个核心发现</div>
+        </div>
+        <button class="btn-toc" data-page="1">☰ 目录</button>
+      </div>
+      <div class="page-inner">
+        <div class="section-card">
+          <div class="finding-grid">
+            <div class="finding-item">
+              <div class="finding-n">1</div>
+              <p><strong>网络资本管"进门"，不管"学好"</strong><br>家长关系广，能帮孩子进更好的学校；但进去之后，家长的关系圈对孩子成绩没有直接帮助。</p>
+            </div>
+            <div class="finding-item">
+              <div class="finding-n red">2</div>
+              <p><strong>陪孩子聊天比辅导功课更有用</strong><br>父母和孩子讨论学校的事 → 成绩显著提升。父母直接指导功课、检查作业 → 成绩反而更差。这个负效应不能用"负向选择"解释。</p>
+            </div>
+            <div class="finding-item">
+              <div class="finding-n gold">3</div>
+              <p><strong>两种资本会互相放大</strong><br>网络资本丰富的家长，更擅长和老师、其他家长建立联系，从而间接提升孩子成绩。穷人家长不是不想参与，是没有资源去参与。</p>
+            </div>
+          </div>
+
+          <h3>父母参与的5个指标及影响方向</h3>
+          <table class="note-table">
+            <thead>
+              <tr><th>指标</th><th>类型</th><th>影响方向</th><th>备注</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>和孩子讨论学校事宜</td>
+                <td>父母参与</td>
+                <td><span class="verdict-yes">正效应 ✅</span></td>
+                <td>影响最大的变量之一</td>
+              </tr>
+              <tr>
+                <td>指导孩子功课</td>
+                <td>父母参与</td>
+                <td><span class="verdict-no">负效应 ❌</span></td>
+                <td>小学生显著</td>
+              </tr>
+              <tr>
+                <td>检查孩子作业</td>
+                <td>父母参与</td>
+                <td><span class="verdict-no">负效应 ❌</span></td>
+                <td>中学生显著</td>
+              </tr>
+              <tr>
+                <td>认识其他孩子家长数量</td>
+                <td>代际闭合</td>
+                <td><span class="verdict-yes">正效应 ✅</span></td>
+                <td>对小学生有效</td>
+              </tr>
+              <tr>
+                <td>主动联系老师频率</td>
+                <td>代际闭合</td>
+                <td><span class="verdict-yes">正效应 ✅</span></td>
+                <td>对中学生有效</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="page-footer">
+        <button class="btn-turn" data-dir="-1">← 上一页</button>
+        <div class="page-num-display">第 <span class="cur">6</span> / 8 页</div>
+        <button class="btn-turn" data-dir="1">下一页 →</button>
+      </div>
+    </div>
+
+    <!-- 页 6：交互作用 + 年龄差异 -->
+    <div class="page" data-idx="6">
+      <div class="page-header">
+        <div>
+          <div class="page-section-num">Section 05</div>
+          <div class="page-section-title">交互作用 · 年龄差异</div>
+        </div>
+        <button class="btn-toc" data-page="1">☰ 目录</button>
+      </div>
+      <div class="page-inner">
+        <div class="section-card">
+          <h2>交互作用是什么</h2>
+          <p>不是A影响B、B影响C的链条，而是：<strong>A对C的影响，取决于B有多少。</strong></p>
+          <blockquote>网络资本不直接提升成绩，但它是一把钥匙——让家长更有能力去建立有效的家校关系，从而间接帮到孩子。穷人家长缺的不只是钱，也缺这把钥匙。</blockquote>
+
+          <h3>具体交互效应</h3>
+          <div class="compare-grid">
+            <div class="compare-cell sage-cell">
+              <div class="compare-label sage">小学生</div>
+              <p>网络资本 × 认识其他家长数量 → 对成绩有显著正效应</p>
+              <p style="margin-top:0.4rem;font-size:0.75rem;color:var(--faded)">家长关系越广，认识其他家长这件事对孩子成绩的提升就越明显</p>
+            </div>
+            <div class="compare-cell red-cell">
+              <div class="compare-label red">中学生</div>
+              <p>网络资本 × 联系老师频率 → 对成绩有显著正效应</p>
+              <p style="margin-top:0.4rem;font-size:0.75rem;color:var(--faded)">家长关系越广，联系老师这件事对孩子成绩的提升就越明显</p>
+            </div>
+          </div>
+
+          <h3>技术处理：对中处理</h3>
+          <p>直接引入交互项会产生多重共线性。解决方法：把原变量减去均值后再相乘，消除共线性问题。</p>
+
+          <h2>年龄差异对比</h2>
+          <table class="note-table">
+            <thead>
+              <tr><th>维度</th><th>小学生</th><th>中学生</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>网络资本影响学校等级</td><td>有，但弱</td><td><span class="verdict-yes">有，且更强</span></td></tr>
+              <tr><td>父母聊天影响成绩</td><td>显著正效应</td><td>显著正效应</td></tr>
+              <tr><td>父母辅导功课</td><td><span class="verdict-no">负效应（显著）</span></td><td>负效应（不显著）</td></tr>
+              <tr><td>检查作业</td><td>负效应</td><td><span class="verdict-no">负效应（显著）</span></td></tr>
+              <tr><td>家长联系老师</td><td>不显著</td><td><span class="verdict-yes">显著（尤其孩子有问题时）</span></td></tr>
+              <tr><td>家长认识其他家长</td><td><span class="verdict-yes">显著</span></td><td>不显著</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="page-footer">
+        <button class="btn-turn" data-dir="-1">← 上一页</button>
+        <div class="page-num-display">第 <span class="cur">7</span> / 8 页</div>
+        <button class="btn-turn" data-dir="1">下一页 →</button>
+      </div>
+    </div>
+
+    <!-- 页 7：检验问答记录 -->
+    <div class="page" data-idx="7">
+      <div class="page-header">
+        <div>
+          <div class="page-section-num">Section 06</div>
+          <div class="page-section-title">检验问答记录</div>
+        </div>
+        <button class="btn-toc" data-page="1">☰ 目录</button>
+      </div>
+      <div class="page-inner">
+        <div class="section-card">
+          <div class="qa-block">
+            <div class="qa-q">论文说"父母指导功课频率越高，孩子成绩反而越差"。作者用了什么方法来检验这个负效应不是由"负向选择"造成的？结果说明了什么？</div>
+            <div class="qa-a">引用了一个工具变量，孩子是否在学校有不良行为。结果是，引入了变量后，这个负效应依然存在，所以不是由负向选择造成的。</div>
+            <div class="qa-feedback">答对了，逻辑清晰。补充：选"不良行为"是因为成绩差的孩子往往也更容易有不良行为，控制住这个干扰后负效应还在，说明管本身就有反效果。</div>
+          </div>
+
+          <div class="qa-block">
+            <div class="qa-q">网络资本对小学生和中学生"进好学校"的影响，哪个更强？论文给出的解释是什么？</div>
+            <div class="qa-a">中学生更强。解释忘了。</div>
+            <div class="qa-feedback">中学阶段教育资源分布更不均衡，好中学和差中学差距更大，竞争更激烈（尤其"小升初"节点）。一些名校恢复初中部，让"小升初"和高考关系越来越紧密，进好中学门槛更高，家长更需要动用关系。</div>
+          </div>
+
+          <div class="qa-block">
+            <div class="qa-q">论文把社会闭合拆成了"父母参与"和"代际闭合"两块。请说出各自包含哪些具体测量指标，以及它们对成绩的影响方向。</div>
+            <div class="qa-a">父母参与：和孩子讨论学校相关的事情（正效应），直接干预孩子的功课、学习（负效应）。代际闭合：家长主动联系其他孩子家长和老师。</div>
+            <div class="qa-feedback">方向对了，但漏了关键信息：联系其他家长对小学生有效，联系老师对中学生有效，这个年龄差异是论文重要发现。另外"检查作业"也是负效应，需要和"指导功课"分开列举。</div>
+          </div>
+
+          <h3>掌握情况小结</h3>
+          <div class="tag-group">
+            <span class="tag tag-green">核心逻辑 ✅</span>
+            <span class="tag tag-green">工具变量题 ✅</span>
+            <span class="tag tag-red">年龄差异解释 需加强</span>
+            <span class="tag tag-red">具体测量指标 需加强</span>
+          </div>
+        </div>
+      </div>
+      <div class="page-footer">
+        <button class="btn-turn" data-dir="-1">← 上一页</button>
+        <div class="page-num-display">第 <span class="cur">8</span> / 8 页</div>
+        <button class="btn-turn" disabled>下一页 →</button>
+      </div>
+    </div>
+
+  </div><!-- /book-pages -->
+</div><!-- /book-shell -->
+
+<script>
+(function() {
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const total = pages.length;
+  let current = 0;
+  let animating = false;
+
+  function goTo(idx) {
+    if (animating || idx === current || idx < 0 || idx >= total) return;
+    animating = true;
+    const from = current;
+    const to = idx;
+    const forward = to > from;
+
+    if (forward) {
+      pages[from].classList.add('flipping-out');
+      pages[from].classList.remove('is-current');
+      pages[to].style.transform = 'rotateY(-90deg)';
+      pages[to].classList.add('flipping-in');
+      pages[to].classList.remove('is-past');
+    } else {
+      pages[from].classList.add('flipping-out');
+      pages[from].classList.remove('is-current');
+      pages[to].style.transform = 'rotateY(90deg)';
+      pages[to].classList.add('flipping-in');
+      pages[to].classList.remove('is-past');
+    }
+
+    setTimeout(() => {
+      pages[from].classList.remove('flipping-out');
+      pages[from].classList.add(forward ? 'is-past' : '');
+      if (!forward) pages[from].style.transform = 'rotateY(-90deg)';
+      pages[to].classList.remove('flipping-in');
+      pages[to].classList.add('is-current');
+      pages[to].style.transform = '';
+      current = to;
+      animating = false;
+      updateFooters();
+    }, 580);
+  }
+
+  function updateFooters() {
+    document.querySelectorAll('.page-num-display .cur').forEach((el, i) => {
+      const pageEl = el.closest('.page');
+      const idx = parseInt(pageEl.dataset.idx);
+      el.textContent = idx + 1;
+    });
+    document.querySelectorAll('.btn-turn').forEach(btn => {
+      const dir = parseInt(btn.dataset.dir);
+      const pageEl = btn.closest('.page');
+      const idx = parseInt(pageEl.dataset.idx);
+      if (isNaN(dir)) return;
+      btn.disabled = (idx + dir < 0 || idx + dir >= total);
+    });
+  }
+
+  document.getElementById('bookPages').addEventListener('click', e => {
+    const btn = e.target.closest('[data-dir]');
+    if (btn) {
+      const dir = parseInt(btn.dataset.dir);
+      goTo(current + dir);
+      return;
+    }
+    const toc = e.target.closest('[data-page]');
+    if (toc) {
+      goTo(parseInt(toc.dataset.page));
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') goTo(current + 1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   goTo(current - 1);
+  });
+
+  let touchStartX = 0;
+  document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) goTo(current + (dx < 0 ? 1 : -1));
+  });
+
+  updateFooters();
+})();
+</script>
+</body>
+</html>
+    <div class="page" data-idx="2">
+      <div class="page-header">
+        <div>
+          <div class="page-section-num">Section 01</div>
+          <div class="page-section-title">核心问题与两个概念</div>
+        </div>
+        <button class="btn-toc" data-page="1">☰ 目录</button>
+      </div>
+      <div class="page-inner">
+        <div class="section-card">
+          <h2>论文要回答什么</h2>
+          <p>社会资本怎么影响孩子的教育获得？不满足于"有影响"这个结论——要搞清楚<strong>两种社会资本各自怎么起作用、有什么区别、会不会互相影响</strong>。</p>
+          <blockquote>把布迪厄和科尔曼两套框架放进同一个模型，发现它们不是竞争关系，而是分工合作：一个管机会，一个管成绩，还能互相放大。</blockquote>
+
+          <h2>两个核心概念对比</h2>
+          <div class="compare-grid">
+            <div class="compare-cell sage-cell">
+              <div class="compare-label sage">网络资源型社会资本</div>
+              <p><strong>提出者：</strong>布迪厄</p>
+              <p><strong>来源：</strong>家长的社会网络（关系圈）</p>
+              <p><strong>谁受益：</strong>孩子是间接受益者</p>
+              <p><strong>主要功能：</strong>提供更好的教育机会（进好学校）</p>
+              <p><strong>测量：</strong>春节拜年网中的职业权力分数</p>
+            </div>
+            <div class="compare-cell red-cell">
+              <div class="compare-label red">社会闭合型社会资本</div>
+              <p><strong>提出者：</strong>科尔曼</p>
+              <p><strong>来源：</strong>家长-孩子-老师-其他家长之间的紧密结构</p>
+              <p><strong>谁受益：</strong>孩子直接受益</p>
+              <p><strong>主要功能：</strong>直接提升学业成绩</p>
+              <p><strong>测量：</strong>父母参与 + 代际闭合</p>
+            </div>
+          </div>
+
+          <h3>社会闭合的两个子类型</h3>
+          <ul class="concept-list">
+            <li class="concept-item">
+              <div class="concept-icon icon-sage">👨‍👧</div>
+              <div class="concept-body">
+                <strong>父母参与</strong>
+                <p>父母和孩子讨论学校事宜、指导功课、检查作业</p>
+              </div>
+            </li>
+            <li class="concept-item">
+              <div class="concept-icon icon-red">🤝</div>
+              <div class="concept-body">
+                <strong>代际闭合</strong>
+                <p>家长认识其他孩子的家长、家长主动联系老师</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="page-footer">
+        <button class="btn-turn" data-dir="-1">← 上一页</button>
+        <div class="page-num-display">第 <span class="cur">3</span> / 8 页</div>
+        <button class="btn-turn" data-dir="1">下一页 →</button>
+      </div>
+    </div>
