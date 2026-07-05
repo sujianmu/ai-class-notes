@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生日快乐 · 廖彩依</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg-1: #130915;
+    --bg-2: #3b162a;
+    --rose: #f48aa7;
+    --peach: #ffd0be;
+    --cream: #fff7ec;
+    --gold: #f4c66b;
+    --ink: #512438;
+    --muted: #8a6070;
+  }
+  html, body { min-height: 100%; }
+  body {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    overflow-x: hidden;
+    padding: 28px 14px;
+    color: var(--cream);
+    font-family: Georgia, "Noto Serif SC", "SimSun", serif;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(244, 138, 167, .34), transparent 30%),
+      radial-gradient(circle at 84% 18%, rgba(244, 198, 107, .22), transparent 26%),
+      linear-gradient(140deg, var(--bg-1), var(--bg-2) 54%, #210b18);
+  }
+  .sky, .petals, .glow { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+  .sky { z-index: 0; }
+  .star {
+    position: absolute;
+    width: var(--s);
+    height: var(--s);
+    border-radius: 50%;
+    background: rgba(255, 247, 236, .9);
+    box-shadow: 0 0 14px rgba(255, 208, 190, .8);
+    animation: twinkle var(--d) ease-in-out infinite alternate;
+  }
+  @keyframes twinkle { from { opacity: .18; transform: scale(.72); } to { opacity: .95; transform: scale(1.25); } }
+  .glow { z-index: 1; }
+  .glow::before, .glow::after {
+    content: "";
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    filter: blur(20px);
+    opacity: .28;
+    animation: breathe 5s ease-in-out infinite alternate;
+  }
+  .glow::before { left: -70px; bottom: 8%; background: var(--rose); }
+  .glow::after { right: -90px; top: 14%; background: var(--gold); animation-delay: -1.8s; }
+  @keyframes breathe { to { transform: scale(1.18) translateY(-18px); opacity: .42; } }
+  .petals { z-index: 2; }
+  .petal {
+    position: absolute;
+    top: -40px;
+    font-size: var(--fs);
+    opacity: 0;
+    animation: fall var(--dur) linear infinite;
+    animation-delay: var(--delay);
+  }
+  @keyframes fall {
+    0% { transform: translate3d(0, -40px, 0) rotate(0deg); opacity: 0; }
+    10% { opacity: .85; }
+    100% { transform: translate3d(var(--dx), 108vh, 0) rotate(420deg); opacity: 0; }
+  }
+  .wrap {
+    position: relative;
+    z-index: 5;
+    width: min(980px, 100%);
+    animation: rise .9s cubic-bezier(.2, .8, .2, 1) both;
+  }
+  @keyframes rise { from { opacity: 0; transform: translateY(24px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 34px;
+    padding: clamp(24px, 4vw, 46px);
+    background:
+      linear-gradient(135deg, rgba(255, 247, 236, .96), rgba(255, 227, 220, .94) 55%, rgba(255, 248, 238, .98)),
+      radial-gradient(circle at 0 0, rgba(244, 138, 167, .28), transparent 36%);
+    color: var(--ink);
+    box-shadow: 0 34px 90px rgba(0, 0, 0, .46), inset 0 0 0 1px rgba(255, 255, 255, .72);
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 16px;
+    border: 1px solid rgba(244, 198, 107, .45);
+    border-radius: 25px;
+    pointer-events: none;
+  }
+  .ribbon {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 14px;
+    border-radius: 999px;
+    color: #7c354d;
+    background: rgba(244, 138, 167, .16);
+    border: 1px solid rgba(244, 138, 167, .28);
+    font: 700 12px/1.2 "Times New Roman", Georgia, serif;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 1.08fr .92fr;
+    gap: clamp(24px, 4vw, 46px);
+    align-items: center;
+    position: relative;
+    z-index: 1;
+  }
+  h1 {
+    margin: 24px 0 16px;
+    font-size: clamp(42px, 8vw, 86px);
+    line-height: .95;
+    letter-spacing: -.04em;
+    color: #8f294a;
+  }
+  .headline-mark {
+    display: block;
+    color: #c54d6d;
+    text-shadow: 0 10px 30px rgba(197, 77, 109, .20);
+  }
+  .lead {
+    max-width: 560px;
+    color: #734052;
+    font-size: clamp(16px, 2.2vw, 20px);
+    line-height: 1.85;
+  }
+  .letter {
+    margin-top: 28px;
+    padding: 24px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, .54);
+    border: 1px solid rgba(244, 198, 107, .36);
+    box-shadow: 0 18px 38px rgba(113, 52, 72, .12);
+  }
+  .letter p {
+    font-size: 17px;
+    line-height: 1.95;
+    color: #5f2c40;
+  }
+  .letter strong { color: #a93258; }
+  .sign {
+    margin-top: 18px;
+    text-align: right;
+    color: #7a4a5a;
+    line-height: 1.7;
+    font-style: italic;
+  }
+  .date-text { font-size: 13px; color: var(--muted); }
+  .side {
+    display: grid;
+    gap: 18px;
+  }
+  .portrait-card {
+    min-height: 310px;
+    border-radius: 30px;
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 42% 28%, rgba(255, 255, 255, .95) 0 10%, transparent 11%),
+      radial-gradient(circle at 54% 28%, rgba(255, 255, 255, .95) 0 10%, transparent 11%),
+      linear-gradient(155deg, #9f2f58, #f48aa7 52%, #ffd0be);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .45), 0 24px 50px rgba(143, 41, 74, .22);
+  }
+  .portrait-card::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    left: 50%;
+    top: 44%;
+    transform: translate(-50%, -50%);
+    border-radius: 48% 52% 46% 54%;
+    background: radial-gradient(circle at 50% 38%, #ffe9df 0 29%, #ffc7b3 30% 52%, #8f294a 53% 57%, transparent 58%);
+    box-shadow: 0 22px 0 -5px rgba(255, 233, 223, .92);
+  }
+  .portrait-card::after {
+    content: "cute but brave";
+    position: absolute;
+    left: 22px;
+    right: 22px;
+    bottom: 22px;
+    padding: 13px 16px;
+    border-radius: 18px;
+    color: #fff7ec;
+    background: rgba(65, 17, 42, .34);
+    border: 1px solid rgba(255, 255, 255, .22);
+    backdrop-filter: blur(10px);
+    font-size: 14px;
+    letter-spacing: .08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  .wish-box, .tags {
+    border-radius: 24px;
+    background: rgba(255, 255, 255, .56);
+    border: 1px solid rgba(244, 198, 107, .36);
+    padding: 20px;
+  }
+  .wish-box h2 {
+    font-size: 17px;
+    color: #9d3656;
+    margin-bottom: 12px;
+  }
+  .wish-list {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    color: #684153;
+    line-height: 1.6;
+    font-size: 15px;
+  }
+  .wish-list li::before { content: "&#10022; "; color: #d49536; }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tag {
+    padding: 8px 11px;
+    border-radius: 999px;
+    background: rgba(244, 138, 167, .15);
+    color: #8f294a;
+    font-size: 13px;
+  }
+  .tiny-note {
+    margin-top: 18px;
+    color: #936071;
+    font-size: 13px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  @media (max-width: 760px) {
+    body { padding: 18px 10px; align-items: start; }
+    .card { border-radius: 26px; }
+    .card::before { inset: 10px; border-radius: 20px; }
+    .layout { grid-template-columns: 1fr; }
+    .portrait-card { min-height: 230px; order: -1; }
+    .letter { padding: 19px; }
+    .letter p { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+  <div class="sky" id="sky"></div>
+  <div class="glow"></div>
+  <div class="petals" id="petals"></div>
+
+  <main class="wrap">
+    <section class="card" aria-label="廖彩依生日贺卡">
+      <div class="layout">
+        <div class="main">
+          <div class="ribbon">Happy Birthday · Liao Caiyi</div>
+          <h1>愿你新的一岁，<span class="headline-mark">可爱，也有光。</span></h1>
+          <p class="lead">送给廖彩依。送给那个一起扛过学院青马班工作、消息再多也会认真回应的人。</p>
+
+          <div class="letter">
+            <p>彩依生日快乐——<br><br>
+            还记得青马班那段时间，你总是在一堆通知、材料、培训和群消息里认真说<strong>“收到”</strong>，也会很可爱地问清每个细节。你偶尔会小小内耗，但恢复得很快，像一颗软软的、又很坚强的星星。<br><br>
+            新的一岁，愿你少一点担心，多一点被偏爱；继续可爱，继续坚定，继续把自己的路走得亮亮的。</p>
+            <div class="sign">—— 你的青马班工作搭子<br><span class="date-text"></span></div>
+          </div>
+          <div class="tiny-note">For the girl who always comes back stronger</div>
+        </div>
+
+        <aside class="side">
+          <div class="portrait-card" aria-hidden="true"></div>
+          <div class="wish-box">
+            <h2>想送给你的三句话</h2>
+            <ul class="wish-list">
+              <li>愿你每一次认真，都被温柔看见。</li>
+              <li>愿你允许自己慢慢来，也相信自己会很好。</li>
+              <li>愿生日这天，所有快乐都先偏向你。</li>
+            </ul>
+          </div>
+          <div class="tags">
+            <span class="tag">很可爱</span>
+            <span class="tag">很认真</span>
+            <span class="tag">恢复力很强</span>
+            <span class="tag">青马班伙伴</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+<script>
+  document.querySelector('.date-text').textContent = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  const sky = document.getElementById('sky');
+  for (let i = 0; i < 90; i++) {
+    const star = document.createElement('span');
+    star.className = 'star';
+    const size = (Math.random() * 2.6 + 1).toFixed(1) + 'px';
+    star.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--s:${size};--d:${(Math.random()*2.4+1.2).toFixed(2)}s;animation-delay:${(Math.random()*3).toFixed(2)}s;`;
+    sky.appendChild(star);
+  }
+
+  const petals = document.getElementById('petals');
+  const petalChars = ['&#10047;', '&#9825;', '&#10022;', '&#10048;'];
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('span');
+    p.className = 'petal';
+    p.textContent = petalChars[i % petalChars.length];
+    p.style.cssText = `left:${Math.random()*100}%;--dx:${(Math.random()*120-60).toFixed(0)}px;--fs:${(Math.random()*12+13).toFixed(0)}px;--dur:${(Math.random()*5+7).toFixed(1)}s;--delay:${(Math.random()*9).toFixed(1)}s;color:${i%2 ? '#ffd0be' : '#f4c66b'};`;
+    petals.appendChild(p);
+  }
+</script>
+</body>
+</html>
